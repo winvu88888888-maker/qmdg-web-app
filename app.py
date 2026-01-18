@@ -466,29 +466,57 @@ if st.session_state.current_view == "ky_mon":
                             markers.append("🐎 Dịch Mã")
                         marker_text = " ".join(markers) if markers else ""
                         
-                        # Display palace card
+                        # Display palace card with enhanced design
                         st.markdown(f"""
                         <div style="
-                            background-color: {bg_color};
+                            background: linear-gradient(135deg, {bg_color} 0%, {bg_color}ee 100%);
                             border: {border_width} solid {border_color};
-                            border-radius: 10px;
-                            padding: 12px;
-                            margin: 5px;
-                            min-height: 200px;
+                            border-radius: 15px;
+                            padding: 16px;
+                            margin: 8px;
+                            min-height: 240px;
+                            box-shadow: 0 4px 6px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08);
+                            transition: all 0.3s ease;
+                            position: relative;
+                            overflow: hidden;
                         ">
-                            <div style="text-align: center; font-weight: bold; font-size: 18px; color: #2c3e50;">
+                            <div style="
+                                position: absolute;
+                                top: -50px;
+                                right: -50px;
+                                width: 100px;
+                                height: 100px;
+                                background: rgba(255,255,255,0.1);
+                                border-radius: 50%;
+                            "></div>
+                            <div style="text-align: center; font-weight: 700; font-size: 20px; color: #1a1a2e; margin-bottom: 4px; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">
                                 Cung {palace_num} - {QUAI_TUONG.get(palace_num, '')}
                             </div>
-                            <div style="text-align: center; font-size: 12px; color: #7f8c8d; margin-bottom: 8px;">
+                            <div style="text-align: center; font-size: 13px; color: #555; margin-bottom: 12px; font-weight: 600;">
                                 {hanh} {marker_text}
                             </div>
-                            <hr style="margin: 8px 0;">
-                            <div style="font-size: 13px; line-height: 1.6;">
-                                <b>⭐ Tinh:</b> {sao}<br>
-                                <b>🚪 Môn:</b> {cua}<br>
-                                <b>👤 Thần:</b> {than}<br>
-                                <b>☁️ Can Thiên:</b> {can_thien}<br>
-                                <b>🌍 Can Địa:</b> {can_dia}
+                            <div style="height: 2px; background: linear-gradient(90deg, transparent, {border_color}, transparent); margin: 10px 0;"></div>
+                            <div style="font-size: 14px; line-height: 2; font-family: 'Segoe UI', Arial, sans-serif;">
+                                <div style="display: flex; align-items: center; margin: 4px 0;">
+                                    <span style="min-width: 110px; font-weight: 600; color: #444;">⭐ Tinh:</span>
+                                    <span style="color: #2c3e50; font-weight: 500;">{sao}</span>
+                                </div>
+                                <div style="display: flex; align-items: center; margin: 4px 0;">
+                                    <span style="min-width: 110px; font-weight: 600; color: #444;">🚪 Môn:</span>
+                                    <span style="color: #2c3e50; font-weight: 500;">{cua}</span>
+                                </div>
+                                <div style="display: flex; align-items: center; margin: 4px 0;">
+                                    <span style="min-width: 110px; font-weight: 600; color: #444;">👤 Thần:</span>
+                                    <span style="color: #2c3e50; font-weight: 500;">{than}</span>
+                                </div>
+                                <div style="display: flex; align-items: center; margin: 4px 0;">
+                                    <span style="min-width: 110px; font-weight: 600; color: #444;">☁️ Can Thiên:</span>
+                                    <span style="color: #2c3e50; font-weight: 500;">{can_thien}</span>
+                                </div>
+                                <div style="display: flex; align-items: center; margin: 4px 0;">
+                                    <span style="min-width: 110px; font-weight: 600; color: #444;">🌍 Can Địa:</span>
+                                    <span style="color: #2c3e50; font-weight: 500;">{can_dia}</span>
+                                </div>
                             </div>
                         </div>
                         """, unsafe_allow_html=True)
