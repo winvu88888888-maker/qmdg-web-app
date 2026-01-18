@@ -1,0 +1,130 @@
+{
+    "STARS_ICONIC": {
+        "Thiên Bòng": {
+            "Hành": "Thủy",
+            "Tính_Chất": "Thông minh, to gan làm liều, mạo hiểm, tham lam, đa tình.",
+            "Nhân_Vật": "Đạo tặc, đại tướng trấn thủ, doanh nhân mạo hiểm, xã hội đen, người săn cá.",
+            "Thân_Thể": "Tai, thận, hệ sinh dục, tóc, mắt, bắp chân.",
+            "Địa_Lý": "Phương Bắc, cung điện, nhà dột, gần nước, kiến trúc tam giác.",
+            "Động_Vật": "Heo, chuột, dơi, thú thủy sinh.",
+            "Âm_Bàn_Tượng": "Trí tuệ, tặc tinh, hành động âm thầm, cột buồm, tóc xõa."
+        },
+        "Thiên Nhuế": {
+            "Hành": "Thổ",
+            "Tính_Chất": "Tham lam, bế tắc, học hỏi, âm hiểm, bệnh tật.",
+            "Nhân_Vật": "Bác sĩ, nông dân, sản phụ, người bệnh, học sinh, thầy giáo.",
+            "Thân_Thể": "Bụng, tỳ vị, nội tạng.",
+            "Địa_Lý": "Bệnh viện, trường học, bãi đất, lỗi lầm.",
+            "Động_Vật": "Trâu, bò, dê.",
+            "Âm_Bàn_Tượng": "Bệnh tinh, người mẹ mang thai, tinh thần không tốt, lỗi lầm."
+        },
+        "Thiên Xung": {
+            "Hành": "Mộc",
+            "Tính_Chất": "Dũng cảm, thẳng thắn, xung đột, nhanh nhẹn, va chạm.",
+            "Nhân_Vật": "Võ sĩ, lính, người lái xe, người nóng tính.",
+            "Thân_Thể": "Gan, chân, gân cốt.",
+            "Địa_Lý": "Đường đi, rừng cây, nơi ồn ào.",
+            "Âm_Bàn_Tượng": "Năng lượng va chạm, động binh, làm việc lớn, không hợp ổn định."
+        },
+        "Thiên Phụ": {
+            "Hành": "Mộc",
+            "Tính_Chất": "Nhân từ, khiêm tốn, nho nhã, có tu dưỡng, hỗ trợ.",
+            "Nhân_Vật": "Giáo viên, học giả, y tá, người giúp sự.",
+            "Thân_Thể": "Mắt, hệ thần kinh.",
+            "Địa_Lý": "Trường học, rừng, vườn hoa, bãi cỏ.",
+            "Âm_Bàn_Tượng": "Văn khúc tinh, phát triển văn hóa, công việc phụ trợ."
+        },
+        "Thiên Anh": {
+            "Hành": "Hỏa",
+            "Tính_Chất": "Nóng nảy, hiểu lý, ham danh tiếng, xốc nổi.",
+            "Nhân_Vật": "Nghệ sĩ, người mẫu, người trong ngành truyền thông, lính cứu hỏa.",
+            "Thân_Thể": "Tim, mắt, máu, mặt.",
+            "Địa_Lý": "Nơi rực rỡ, nhà hát, cơ quan điện lực.",
+            "Âm_Bàn_Tượng": "Chiếu sáng, danh tiếng, hỏa hoạn, đồ điện gia dụng."
+        },
+        "Thiên Trụ": {
+            "Hành": "Kim",
+            "Tính_Chất": "Trầm tĩnh, ổn định, phá hoại, thích tranh luận, hiếu chiến.",
+            "Nhân_Vật": "Luật sư, ca sĩ, thầy giáo, quân cảnh, phát ngôn viên.",
+            "Thân_Thể": "Phổi, họng, miệng, cột sống.",
+            "Địa_Lý": "Vật hình trụ, cột, núi cao, kiến trúc cao lớn.",
+            "Âm_Bàn_Tượng": "Trụ cột vững chắc, nhanh mồm nhanh miệng, nói thẳng."
+        },
+        "Thiên Tâm": {
+            "Hành": "Kim",
+            "Tính_Chất": "Mưu lược, trí tuệ, nhân từ, chu toàn, lãnh đạo.",
+            "Nhân_Vật": "Lãnh đạo, bác sĩ, cố vấn, quan chức cấp cao.",
+            "Thân_Thể": "Đầu, não, phổi.",
+            "Địa_Lý": "Cơ quan nhà nước, bệnh viện, nơi trang nghiêm.",
+            "Âm_Bàn_Tượng": "Suy nghĩ sâu sắc, mưu trí, cầu quý nhân."
+        },
+        "Thiên Nhậm": {
+            "Hành": "Thổ",
+            "Tính_Chất": "Ổn định, kiên trì, đáng tin, chậm chạp, trung hậu.",
+            "Nhân_Vật": "Người làm nông, bất động sản, kế toán, người giữ kho.",
+            "Thân_Thể": "Lưng, mũi, tay.",
+            "Địa_Lý": "Núi, gò đất, kho bãi.",
+            "Âm_Bàn_Tượng": "Sản sinh vạn vật, tu tạo, kinh doanh điền sản."
+        },
+        "Thiên Cầm": {
+            "Hành": "Thổ",
+            "Tính_Chất": "Uy quyền, tôn quý, chính trực, công bằng.",
+            "Nhân_Vật": "Hoàng đế, thủ trưởng, người trung gian.",
+            "Thân_Thể": "Bụng, nội tạng.",
+            "Địa_Lý": "Trung tâm, nơi bằng phẳng.",
+            "Âm_Bàn_Tượng": "Thượng cát, nghệ thuật, mềm dẻo, đi cùng Trực Phù."
+        }
+    },
+    "DOORS_ICONIC": {
+        "Khai Môn": {
+            "Tính_Chất": "Đại Cát. Mở mang, khởi đầu, thăng tiến.",
+            "Âm_Bàn_Tượng": "Công ty, nhà máy, lãnh đạo, danh tiếng, khai thông."
+        },
+        "Hưu Môn": {
+            "Tính_Chất": "Cát. Nghỉ ngơi, hòa giải, gặp quý nhân.",
+            "Âm_Bàn_Tượng": "Tĩnh dưỡng, du lịch, hôn nhân, sông ngòi, quý nhân."
+        },
+        "Sinh Môn": {
+            "Tính_Chất": "Đại Cát. Tài lộc, sinh sôi, nhà cửa, lợi nhuận.",
+            "Âm_Bàn_Tượng": "Tài sản, bất động sản, cơ hội, sức sống mạnh mẽ."
+        },
+        "Thương Môn": {
+            "Tính_Chất": "Tiểu Hung. Tổn thương, đòi nợ, săn bắt, biến động.",
+            "Âm_Bàn_Tượng": "Cạnh tranh, vận tải, phương tiện, va chạm, tổn thất."
+        },
+        "Đỗ Môn": {
+            "Tính_Chất": "Tiểu Hung. Bế tắc, ẩn giấu, bí mật, quân sự.",
+            "Âm_Bàn_Tượng": "Che đậy, công nghệ, nghiên cứu, rào cản, kỹ thuật."
+        },
+        "Cảnh Môn": {
+            "Tính_Chất": "Tiểu Cát. Văn chương, tin tức, tiệc tùng, rực rỡ.",
+            "Âm_Bàn_Tượng": "Giấy tờ, hợp đồng, chứng khoán, danh hiệu, ánh sáng."
+        },
+        "Tử Môn": {
+            "Tính_Chất": "Đại Hung. Chết chóc, cố chấp, mộ phần, kết thúc.",
+            "Âm_Bàn_Tượng": "Bế tắc tuyệt đối, vật đã chết, đất đai cũ, ngoan cố."
+        },
+        "Kinh Môn": {
+            "Tính_Chất": "Hung. Kinh sợ, kiện tụng, khẩu thiệt, nghi ngờ.",
+            "Âm_Bàn_Tượng": "Tiếng động, miệng lưỡi, tòa án, lo âu, đột ngột."
+        }
+    },
+    "STEM_PROFILING": {
+        "Ất": "Nhật Kỳ. Người nữ, người vợ, thảo dược, sự mềm yếu, tình cảm, hy vọng.",
+        "Bính": "Nguyệt Kỳ. Quyền uy, rực rỡ nhưng không bền, lộn xộn, người tình (nam).",
+        "Đinh": "Tinh Kỳ. Tinh anh, kỳ tích, hy vọng, ngọc nữ, người thứ ba.",
+        "Mậu": "Thiên Nghi. Tiền bạc, tài sản, đất cát, đôn hậu, giá trị lớn.",
+        "Kỷ": "Địa Nghi. Mộ phần, hố, cạm bẫy, người ít nói, thâm trầm.",
+        "Canh": "Thái Bạch. Sát khí, thay đổi, rắn chắc, người nam, người chồng.",
+        "Tân": "Thiên Đinh. Tội nhân, sai lầm nhỏ, thanh mảnh, kim loại nhỏ.",
+        "Nhâm": "Thiên Võng. Lưu động lớn, bàng quan, đường giao thông, biến động.",
+        "Quý": "Địa Võng. Bí mật, đen tối, thận, ngục tù, nhà vệ sinh."
+    },
+    "ADVANCED_METHODS": {
+        "Tháo_Bổ_Di": {
+            "Tháo": "Dỡ bỏ, loại bỏ những yếu tố hung (vật phẩm gây sát) tại cung vị tương ứng.",
+            "Bổ": "Bổ sung, thêm vào các yếu tố cát (vật phẩm may mắn) để tăng cường năng lượng.",
+            "Di": "Di dời, thay đổi vị trí của các yếu tố hoặc chính bản thân đối tượng để thoát khỏi sự khống chế của sát khí."
+        }
+    }
+}

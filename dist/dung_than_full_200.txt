@@ -1,0 +1,170 @@
+DUNG_THAN_200_CHU_DE = {
+    "Kinh Doanh Tổng Quát": {
+        "muc_tieu": "Xem có kiếm được tiền không, lợi nhuận cao không",
+        "ky_mon": {"dung_than": "Sinh Môn + Mậu + Can Ngày", "giai_thich": "Sinh Môn = Lợi nhuận. Mậu = Vốn", "cach_xem": "Sinh Môn vượng + sinh Can Ngày = Thành công", "trong_so": 70, "vi_du": "Sinh Môn vượng = Kinh Doanh Tổng Quát tốt"},
+        "mai_hoa": {"dung_than": "Quẻ Càn/Đoài - KIM", "giai_thich": "Càn = Tiền lớn. Đoài = Tiền vừa", "cach_xem": "Kim vượng = Có tiền", "trong_so": 60, "vi_du": "Kim vượng = Có tiền"},
+        "luc_hao": {"dung_than": "Hào Thê Tài", "giai_thich": "Thê Tài = Tiền bạc", "cach_xem": "Thê Tài vượng + động = Kiếm tiền nhanh", "trong_so": 65, "vi_du": "Thê Tài vượng + động = Kiếm tiền nhanh"}
+    },
+    "Khai Trương Cửa Hàng": {
+        "muc_tieu": "Xem ngày khai trương có tốt không",
+        "ky_mon": {"dung_than": "Khai Môn + Sinh Môn + Can Năm", "giai_thich": "Khai Môn = Mở cửa. Sinh Môn = Tài lộc", "cach_xem": "Khai Môn vượng = Khởi đầu thuận", "trong_so": 75, "vi_du": "Khai Môn vượng = Khai Trương Cửa Hàng tốt"},
+        "mai_hoa": {"dung_than": "Quẻ Chấn - MỘC", "giai_thich": "Chấn = Khởi động mạnh", "cach_xem": "Chấn vượng = Khai trương thành công", "trong_so": 60, "vi_du": "Chấn vượng = Khai trương thành công"},
+        "luc_hao": {"dung_than": "Hào Thê Tài + Quan Quỷ", "giai_thich": "Thê Tài = Tiền. Quan Quỷ = Danh", "cach_xem": "Cả hai vượng = Hồng phát", "trong_so": 65, "vi_du": "Cả hai vượng = Hồng phát"}
+    },
+    "Ký Kết Hợp Đồng": {
+        "muc_tieu": "Xem có ký được hợp đồng không",
+        "ky_mon": {"dung_than": "Lục Hợp + Cảnh Môn + Can Ngày", "giai_thich": "Lục Hợp = Hợp tác. Cảnh Môn = Văn bản", "cach_xem": "Lục Hợp sinh Can Ngày = Ký thành công", "trong_so": 75, "vi_du": "Lục Hợp vượng = Ký Kết Hợp Đồng tốt"},
+        "mai_hoa": {"dung_than": "Quẻ Đoài - KIM", "giai_thich": "Đoài = Giao tiếp, thỏa thuận", "cach_xem": "Đoài vượng = Ký thuận lợi", "trong_so": 60, "vi_du": "Đoài vượng = Ký thuận lợi"},
+        "luc_hao": {"dung_than": "Hào Phụ Mẫu", "giai_thich": "Phụ Mẫu = Văn bản", "cach_xem": "Phụ Mẫu vượng = Hợp đồng tốt", "trong_so": 65, "vi_du": "Phụ Mẫu vượng = Hợp đồng tốt"}
+    },
+    "Đàm Phán Thương Mại": {
+        "muc_tieu": "Xem đàm phán có thành công không",
+        "ky_mon": {"dung_than": "Can Ngày + Can Giờ + Lục Hợp", "giai_thich": "Can Ngày = Mình. Can Giờ = Đối tác", "cach_xem": "Can Ngày khắc Can Giờ = Mình thắng", "trong_so": 70, "vi_du": "Can Ngày vượng = Đàm Phán Thương Mại tốt"},
+        "mai_hoa": {"dung_than": "Thể Quái + Dụng Quái", "giai_thich": "Thể = Mình. Dụng = Đối phương", "cach_xem": "Thể khắc Dụng = Thắng", "trong_so": 60, "vi_du": "Thể khắc Dụng = Thắng"},
+        "luc_hao": {"dung_than": "Thế + Ứng", "giai_thich": "Thế = Mình. Ứng = Đối tác", "cach_xem": "Thế vượng hơn Ứng = Có lợi", "trong_so": 65, "vi_du": "Thế vượng hơn Ứng = Có lợi"}
+    },
+    "Mua Bán Hàng Hóa": {
+        "muc_tieu": "Xem mua bán có lời không",
+        "ky_mon": {"dung_than": "Can Ngày + Can Giờ + Sinh Môn", "giai_thich": "Sinh Môn = Lợi nhuận", "cach_xem": "Sinh Môn sinh Can Ngày = Mua tốt", "trong_so": 70, "vi_du": "Can Ngày vượng = Mua Bán Hàng Hóa tốt"},
+        "mai_hoa": {"dung_than": "Quẻ Đoài - KIM", "giai_thich": "Đoài = Trao đổi", "cach_xem": "Đoài vượng = Mua bán thuận", "trong_so": 60, "vi_du": "Đoài vượng = Mua bán thuận"},
+        "luc_hao": {"dung_than": "Hào Thê Tài", "giai_thich": "Thê Tài = Hàng hóa", "cach_xem": "Thê Tài vượng = Hàng tốt", "trong_so": 65, "vi_du": "Thê Tài vượng = Hàng tốt"}
+    },
+    "Đầu Tư Chứng Khoán": {
+        "muc_tieu": "Xem đầu tư có lời không",
+        "ky_mon": {"dung_than": "Thiên Bồng + Sinh Môn + Mậu", "giai_thich": "Thiên Bồng = Đầu cơ. Sinh Môn = Lời", "cach_xem": "Sinh Môn vượng = Có lãi", "trong_so": 65, "vi_du": "Thiên Bồng vượng = Đầu Tư Chứng Khoán tốt"},
+        "mai_hoa": {"dung_than": "Quẻ Càn - KIM", "giai_thich": "Càn = Đầu tư lớn", "cach_xem": "Càn vượng = Thành công", "trong_so": 60, "vi_du": "Càn vượng = Thành công"},
+        "luc_hao": {"dung_than": "Hào Thê Tài", "giai_thich": "Thê Tài = Lợi nhuận", "cach_xem": "Thê Tài vượng + động = Lời nhanh", "trong_so": 65, "vi_du": "Thê Tài vượng + động = Lời nhanh"}
+    },
+    "Đầu Tư Bất Động Sản": {
+        "muc_tieu": "Xem đầu tư nhà đất có sinh lời không",
+        "ky_mon": {"dung_than": "Sinh Môn + Tử Môn + Mậu", "giai_thich": "Sinh Môn = Nhà. Tử Môn = Đất", "cach_xem": "Sinh Môn + Tử Môn sinh Can Ngày = Sinh lời", "trong_so": 75, "vi_du": "Sinh Môn vượng = Đầu Tư Bất Động Sản tốt"},
+        "mai_hoa": {"dung_than": "Quẻ Cấn/Khôn - THỔ", "giai_thich": "Cấn = Nhà. Khôn = Đất", "cach_xem": "Thổ vượng = Tốt", "trong_so": 70, "vi_du": "Thổ vượng = Tốt"},
+        "luc_hao": {"dung_than": "Hào Phụ Mẫu + Thê Tài", "giai_thich": "Phụ Mẫu = Nhà. Thê Tài = Lời", "cach_xem": "Cả hai vượng = Sinh lời cao", "trong_so": 70, "vi_du": "Cả hai vượng = Sinh lời cao"}
+    },
+    "Vay Mượn Tiền Bạc": {
+        "muc_tieu": "Xem có vay được tiền không",
+        "ky_mon": {"dung_than": "Trực Phù + Can Ngày + Mậu", "giai_thich": "Trực Phù = Người cho vay", "cach_xem": "Trực Phù sinh Can Ngày = Vay được", "trong_so": 70, "vi_du": "Trực Phù vượng = Vay Mượn Tiền Bạc tốt"},
+        "mai_hoa": {"dung_than": "Quẻ Khôn - THỔ", "giai_thich": "Khôn = Nợ nần", "cach_xem": "Khôn sinh Thể = Vay được", "trong_so": 60, "vi_du": "Khôn sinh Thể = Vay được"},
+        "luc_hao": {"dung_than": "Hào Huynh Đệ", "giai_thich": "Huynh Đệ = Người vay", "cach_xem": "Huynh Đệ vượng = Vay được", "trong_so": 65, "vi_du": "Huynh Đệ vượng = Vay được"}
+    },
+    "Đòi Nợ Thu Hồi": {
+        "muc_tieu": "Xem có đòi được nợ không",
+        "ky_mon": {"dung_than": "Thương Môn + Canh", "giai_thich": "Thương Môn = Đòi nợ. Canh = Con nợ", "cach_xem": "Thương Môn khắc Canh = Đòi được", "trong_so": 75, "vi_du": "Thương Môn vượng = Đòi Nợ Thu Hồi tốt"},
+        "mai_hoa": {"dung_than": "Thể Quái + Dụng Quái", "giai_thich": "Thể = Chủ nợ. Dụng = Con nợ", "cach_xem": "Thể khắc Dụng = Thu được", "trong_so": 60, "vi_du": "Thể khắc Dụng = Thu được"},
+        "luc_hao": {"dung_than": "Hào Thê Tài", "giai_thich": "Thê Tài = Tiền nợ", "cach_xem": "Thê Tài sinh Thế = Thu được", "trong_so": 65, "vi_du": "Thê Tài sinh Thế = Thu được"}
+    },
+    "Cầu Tài Lộc": {
+        "muc_tieu": "Xem có được tài lộc không",
+        "ky_mon": {"dung_than": "Sinh Môn + Trực Phù + Mậu", "giai_thich": "Sinh Môn = Tài. Trực Phù = Quý nhân", "cach_xem": "Sinh Môn + Trực Phù sinh Can Ngày = Được tài", "trong_so": 70, "vi_du": "Sinh Môn vượng = Cầu Tài Lộc tốt"},
+        "mai_hoa": {"dung_than": "Quẻ Càn/Đoài - KIM", "giai_thich": "Kim = Tiền bạc", "cach_xem": "Kim vượng = Có tài", "trong_so": 60, "vi_du": "Kim vượng = Có tài"},
+        "luc_hao": {"dung_than": "Hào Thê Tài", "giai_thich": "Thê Tài = Tài lộc", "cach_xem": "Thê Tài vượng = Được tài", "trong_so": 65, "vi_du": "Thê Tài vượng = Được tài"}
+    },
+    "Mở Rộng Kinh Doanh": {
+        "muc_tieu": "Xem có mở rộng được không",
+        "ky_mon": {"dung_than": "Khai Môn + Sinh Môn", "giai_thich": "Khai Môn = Mở rộng", "cach_xem": "Khai Môn sinh Can Ngày = Mở rộng thành công", "trong_so": 70, "vi_du": "Khai Môn vượng = Mở Rộng Kinh Doanh tốt"},
+        "mai_hoa": {"dung_than": "Quẻ Chấn - MỘC", "giai_thich": "Chấn = Phát triển", "cach_xem": "Chấn vượng = Mở rộng tốt", "trong_so": 60, "vi_du": "Chấn vượng = Mở rộng tốt"},
+        "luc_hao": {"dung_than": "Hào Tử Tôn", "giai_thich": "Tử Tôn = Phát triển", "cach_xem": "Tử Tôn vượng = Mở rộng thuận", "trong_so": 65, "vi_du": "Tử Tôn vượng = Mở rộng thuận"}
+    },
+    "Hợp Tác Đối Tác": {
+        "muc_tieu": "Xem hợp tác có tốt không",
+        "ky_mon": {"dung_than": "Lục Hợp + Can Ngày + Can Giờ", "giai_thich": "Lục Hợp = Hợp tác", "cach_xem": "Lục Hợp sinh cả hai = Hợp tác tốt", "trong_so": 70, "vi_du": "Lục Hợp vượng = Hợp Tác Đối Tác tốt"},
+        "mai_hoa": {"dung_than": "Quẻ Đoài - KIM", "giai_thich": "Đoài = Hòa hợp", "cach_xem": "Đoài vượng = Hợp tác thuận", "trong_so": 60, "vi_du": "Đoài vượng = Hợp tác thuận"},
+        "luc_hao": {"dung_than": "Hào Huynh Đệ", "giai_thich": "Huynh Đệ = Đối tác", "cach_xem": "Huynh Đệ sinh Thế = Hợp tác tốt", "trong_so": 65, "vi_du": "Huynh Đệ sinh Thế = Hợp tác tốt"}
+    },
+    "Xin Việc Làm": {
+        "muc_tieu": "Xem có xin được việc không",
+        "ky_mon": {"dung_than": "Khai Môn + Can Ngày", "giai_thich": "Khai Môn = Công việc", "cach_xem": "Khai Môn sinh Can Ngày = Xin được", "trong_so": 75, "vi_du": "Khai Môn vượng = Xin Việc Làm tốt"},
+        "mai_hoa": {"dung_than": "Quẻ Càn - KIM", "giai_thich": "Càn = Công việc cao", "cach_xem": "Càn vượng = Có việc", "trong_so": 60, "vi_du": "Càn vượng = Có việc"},
+        "luc_hao": {"dung_than": "Hào Quan Quỷ", "giai_thich": "Quan Quỷ = Công việc", "cach_xem": "Quan Quỷ sinh Thế = Xin được", "trong_so": 65, "vi_du": "Quan Quỷ sinh Thế = Xin được"}
+    },
+    "Thăng Chức Thăng Tiến": {
+        "muc_tieu": "Xem có được thăng chức không",
+        "ky_mon": {"dung_than": "Khai Môn + Trực Phù + Can Năm", "giai_thich": "Khai Môn = Chức vụ. Trực Phù = Lãnh đạo", "cach_xem": "Trực Phù sinh Khai Môn = Thăng tiến", "trong_so": 75, "vi_du": "Khai Môn vượng = Thăng Chức Thăng Tiến tốt"},
+        "mai_hoa": {"dung_than": "Quẻ Càn - KIM", "giai_thich": "Càn = Địa vị cao", "cach_xem": "Càn vượng = Thăng chức", "trong_so": 60, "vi_du": "Càn vượng = Thăng chức"},
+        "luc_hao": {"dung_than": "Hào Quan Quỷ", "giai_thich": "Quan Quỷ = Chức vụ", "cach_xem": "Quan Quỷ vượng + động = Thăng nhanh", "trong_so": 70, "vi_du": "Quan Quỷ vượng + động = Thăng nhanh"}
+    },
+    "Chuyển Công Tác": {
+        "muc_tieu": "Xem có chuyển được không",
+        "ky_mon": {"dung_than": "Khai Môn + Mã Tinh", "giai_thich": "Khai Môn = Việc mới. Mã Tinh = Di chuyển", "cach_xem": "Khai Môn sinh Can Ngày = Chuyển tốt", "trong_so": 70, "vi_du": "Khai Môn vượng = Chuyển Công Tác tốt"},
+        "mai_hoa": {"dung_than": "Quẻ Chấn - MỘC", "giai_thich": "Chấn = Chuyển động", "cach_xem": "Chấn vượng = Chuyển thuận", "trong_so": 60, "vi_du": "Chấn vượng = Chuyển thuận"},
+        "luc_hao": {"dung_than": "Hào Quan Quỷ", "giai_thich": "Quan Quỷ = Công việc", "cach_xem": "Quan Quỷ sinh Thế = Chuyển tốt", "trong_so": 65, "vi_du": "Quan Quỷ sinh Thế = Chuyển tốt"}
+    },
+    "Thi Đại Học": {
+        "muc_tieu": "Xem có đỗ đại học không",
+        "ky_mon": {"dung_than": "Cảnh Môn + Đinh + Thiên Phụ", "giai_thich": "Cảnh Môn = Bài thi. Đinh = Điểm", "cach_xem": "Cả ba sinh Can Ngày = Đỗ cao", "trong_so": 75, "vi_du": "Cảnh Môn vượng = Thi Đại Học tốt"},
+        "mai_hoa": {"dung_than": "Quẻ Càn/Cấn - KIM/THỔ", "giai_thich": "Càn = Đỗ cao. Cấn = Học vững", "cach_xem": "Càn/Cấn vượng = Thi đỗ", "trong_so": 65, "vi_du": "Càn/Cấn vượng = Thi đỗ"},
+        "luc_hao": {"dung_than": "Hào Phụ Mẫu + Quan Quỷ", "giai_thich": "Phụ Mẫu = Bài thi. Quan Quỷ = Danh", "cach_xem": "Cả hai vượng = Đỗ cao", "trong_so": 70, "vi_du": "Cả hai vượng = Đỗ cao"}
+    },
+    "Hôn Nhân": {
+        "muc_tieu": "Xem có kết hôn được không",
+        "ky_mon": {"dung_than": "Ất + Canh + Lục Hợp", "giai_thich": "Ất = Nữ. Canh = Nam. Lục Hợp = Hôn nhân", "cach_xem": "Ất Canh hợp + Lục Hợp vượng = Kết hôn thành", "trong_so": 75, "vi_du": "Ất vượng = Hôn Nhân tốt"},
+        "mai_hoa": {"dung_than": "Nam xem Quẻ Âm, Nữ xem Quẻ Dương", "giai_thich": "Âm Dương hòa hợp", "cach_xem": "Âm Dương hòa hợp = Hôn nhân tốt", "trong_so": 65, "vi_du": "Âm Dương hòa hợp = Hôn nhân tốt"},
+        "luc_hao": {"dung_than": "Nam xem Thê Tài, Nữ xem Quan Quỷ", "giai_thich": "Thê Tài = Vợ. Quan Quỷ = Chồng", "cach_xem": "Dụng Thần vượng + sinh Thế = Tốt", "trong_so": 70, "vi_du": "Dụng Thần vượng + sinh Thế = Tốt"}
+    },
+    "Bệnh Tật Chữa Trị": {
+        "muc_tieu": "Xem bệnh có khỏi không",
+        "ky_mon": {"dung_than": "Thiên Nhuế + Thiên Tâm + Ất", "giai_thich": "Thiên Nhuế = Bệnh. Thiên Tâm = Thầy. Ất = Thuốc", "cach_xem": "Thiên Tâm khắc Thiên Nhuế = Khỏi", "trong_so": 80, "vi_du": "Thiên Nhuế vượng = Bệnh Tật Chữa Trị tốt"},
+        "mai_hoa": {"dung_than": "Quẻ Khảm/Ly", "giai_thich": "Khảm = Bệnh lạnh. Ly = Bệnh nóng", "cach_xem": "Quẻ Biến khắc Bản Quẻ = Nặng", "trong_so": 60, "vi_du": "Quẻ Biến khắc Bản Quẻ = Nặng"},
+        "luc_hao": {"dung_than": "Hào Quan Quỷ", "giai_thich": "Quan Quỷ = Bệnh", "cach_xem": "Quan Quỷ suy + bị khắc = Khỏi", "trong_so": 75, "vi_du": "Quan Quỷ suy + bị khắc = Khỏi"}
+    },
+    "Kiện Tụng": {
+        "muc_tieu": "Xem kiện tụng thắng hay thua",
+        "ky_mon": {"dung_than": "Khai Môn + Trực Phù + Canh", "giai_thich": "Khai Môn = Tòa. Trực Phù = Mình. Canh = Đối phương", "cach_xem": "Trực Phù khắc Canh = Thắng", "trong_so": 75, "vi_du": "Khai Môn vượng = Kiện Tụng tốt"},
+        "mai_hoa": {"dung_than": "Thể Quái + Dụng Quái", "giai_thich": "Thể = Mình. Dụng = Đối thủ", "cach_xem": "Thể khắc Dụng = Thắng", "trong_so": 60, "vi_du": "Thể khắc Dụng = Thắng"},
+        "luc_hao": {"dung_than": "Thế + Ứng + Quan Quỷ", "giai_thich": "Thế = Mình. Ứng = Đối thủ. Quan Quỷ = Tòa", "cach_xem": "Thế vượng + Quan Quỷ sinh Thế = Thắng", "trong_so": 70, "vi_du": "Thế vượng + Quan Quỷ sinh Thế = Thắng"}
+    },
+    "Mua Nhà Đất": {
+        "muc_tieu": "Xem có mua được nhà không",
+        "ky_mon": {"dung_than": "Sinh Môn + Tử Môn + Can Ngày", "giai_thich": "Sinh Môn = Nhà. Tử Môn = Đất", "cach_xem": "Sinh Môn sinh Can Ngày = Mua được", "trong_so": 75, "vi_du": "Sinh Môn vượng = Mua Nhà Đất tốt"},
+        "mai_hoa": {"dung_than": "Quẻ Cấn/Khôn - THỔ", "giai_thich": "Cấn = Nhà. Khôn = Đất", "cach_xem": "Thổ vượng = Nhà tốt", "trong_so": 70, "vi_du": "Thổ vượng = Nhà tốt"},
+        "luc_hao": {"dung_than": "Hào Phụ Mẫu", "giai_thich": "Phụ Mẫu = Nhà", "cach_xem": "Phụ Mẫu vượng + động = Mua nhanh", "trong_so": 70, "vi_du": "Phụ Mẫu vượng + động = Mua nhanh"}
+    },
+    "Xuất Hành Xa": {
+        "muc_tieu": "Xem đi xa có thuận lợi không",
+        "ky_mon": {"dung_than": "Mã Tinh + Khai Môn + Can Ngày", "giai_thich": "Mã Tinh = Xe cộ. Khai Môn = Hướng đi", "cach_xem": "Khai Môn sinh Can Ngày = Đi thuận", "trong_so": 70, "vi_du": "Mã Tinh vượng = Xuất Hành Xa tốt"},
+        "mai_hoa": {"dung_than": "Quẻ Chấn - MỘC", "giai_thich": "Chấn = Chuyển động", "cach_xem": "Chấn vượng = Đi xa tốt", "trong_so": 60, "vi_du": "Chấn vượng = Đi xa tốt"},
+        "luc_hao": {"dung_than": "Hào Tử Tôn", "giai_thich": "Tử Tôn = Hành trình", "cach_xem": "Tử Tôn vượng = Đi an toàn", "trong_so": 65, "vi_du": "Tử Tôn vượng = Đi an toàn"}
+    },
+    "Du Lịch": {
+        "muc_tieu": "Xem chuyến du lịch có vui không",
+        "ky_mon": {"dung_than": "Hưu Môn + Cảnh Môn", "giai_thich": "Hưu Môn = Vui chơi. Cảnh Môn = Phong cảnh", "cach_xem": "Hưu Môn + Cảnh Môn vượng = Vui", "trong_so": 70, "vi_du": "Hưu Môn vượng = Du Lịch tốt"},
+        "mai_hoa": {"dung_than": "Quẻ Đoài - KIM", "giai_thich": "Đoài = Vui vẻ", "cach_xem": "Đoài vượng = Du lịch vui", "trong_so": 60, "vi_du": "Đoài vượng = Du lịch vui"},
+        "luc_hao": {"dung_than": "Hào Huynh Đệ", "giai_thich": "Huynh Đệ = Bạn đồng hành", "cach_xem": "Huynh Đệ vượng = Đi với bạn vui", "trong_so": 60, "vi_du": "Huynh Đệ vượng = Đi với bạn vui"}
+    },
+    "Tìm Người Thất Lạc": {
+        "muc_tieu": "Xem có tìm được người không",
+        "ky_mon": {"dung_than": "Lục Hợp + Can Ngày + Can Giờ", "giai_thich": "Lục Hợp = Hướng. Can Giờ = Người mất", "cach_xem": "Lục Hợp sinh Can Ngày = Tìm được", "trong_so": 75, "vi_du": "Lục Hợp vượng = Tìm Người Thất Lạc tốt"},
+        "mai_hoa": {"dung_than": "Quẻ Khảm - THỦY", "giai_thich": "Khảm = Người lạc", "cach_xem": "Khảm sinh Thể = Tìm được", "trong_so": 60, "vi_du": "Khảm sinh Thể = Tìm được"},
+        "luc_hao": {"dung_than": "Hào Ứng", "giai_thich": "Ứng = Người xa", "cach_xem": "Ứng sinh Thế = Tìm được", "trong_so": 70, "vi_du": "Ứng sinh Thế = Tìm được"}
+    },
+    "Tìm Đồ Vật Mất": {
+        "muc_tieu": "Xem có tìm được đồ không",
+        "ky_mon": {"dung_than": "Can Giờ + Huyền Vũ", "giai_thich": "Can Giờ = Vật. Huyền Vũ = Trộm", "cach_xem": "Can Giờ sinh Can Ngày = Tìm được", "trong_so": 70, "vi_du": "Can Giờ vượng = Tìm Đồ Vật Mất tốt"},
+        "mai_hoa": {"dung_than": "Dụng Quái", "giai_thich": "Dụng = Vật mất", "cach_xem": "Dụng sinh Thể = Tìm được", "trong_so": 60, "vi_du": "Dụng sinh Thể = Tìm được"},
+        "luc_hao": {"dung_than": "Hào Phụ Mẫu", "giai_thich": "Phụ Mẫu = Đồ vật", "cach_xem": "Phụ Mẫu vượng = Tìm được", "trong_so": 65, "vi_du": "Phụ Mẫu vượng = Tìm được"}
+    },
+    "Gặp Quý Nhân": {
+        "muc_tieu": "Xem có gặp quý nhân không",
+        "ky_mon": {"dung_than": "Trực Phù + Can Ngày", "giai_thich": "Trực Phù = Quý nhân", "cach_xem": "Trực Phù sinh Can Ngày = Gặp quý nhân", "trong_so": 75, "vi_du": "Trực Phù vượng = Gặp Quý Nhân tốt"},
+        "mai_hoa": {"dung_than": "Quẻ Càn - KIM", "giai_thich": "Càn = Quý nhân", "cach_xem": "Càn sinh Thể = Có quý nhân", "trong_so": 60, "vi_du": "Càn sinh Thể = Có quý nhân"},
+        "luc_hao": {"dung_than": "Hào Quan Quỷ", "giai_thich": "Quan Quỷ = Người có quyền", "cach_xem": "Quan Quỷ sinh Thế = Có quý nhân", "trong_so": 70, "vi_du": "Quan Quỷ sinh Thế = Có quý nhân"}
+    },
+    "Thi Đấu Thể Thao": {
+        "muc_tieu": "Xem thi đấu thắng hay thua",
+        "ky_mon": {"dung_than": "Can Ngày + Can Giờ", "giai_thich": "Can Ngày = Mình. Can Giờ = Đối thủ", "cach_xem": "Can Ngày khắc Can Giờ = Thắng", "trong_so": 70, "vi_du": "Can Ngày vượng = Thi Đấu Thể Thao tốt"},
+        "mai_hoa": {"dung_than": "Thể Quái + Dụng Quái", "giai_thich": "Thể = Mình. Dụng = Đối thủ", "cach_xem": "Thể khắc Dụng = Thắng", "trong_so": 65, "vi_du": "Thể khắc Dụng = Thắng"},
+        "luc_hao": {"dung_than": "Thế + Ứng", "giai_thich": "Thế = Mình. Ứng = Đối thủ", "cach_xem": "Thế vượng hơn Ứng = Thắng", "trong_so": 70, "vi_du": "Thế vượng hơn Ứng = Thắng"}
+    },
+    "Thời Tiết": {
+        "muc_tieu": "Xem thời tiết mưa hay nắng",
+        "ky_mon": {"dung_than": "Thiên Trụ + Thiên Anh", "giai_thich": "Thiên Trụ = Mưa. Thiên Anh = Nắng", "cach_xem": "Thiên Trụ vượng = Mưa", "trong_so": 80, "vi_du": "Thiên Trụ vượng = Thời Tiết tốt"},
+        "mai_hoa": {"dung_than": "Quẻ Khảm = Mưa, Quẻ Ly = Nắng", "giai_thich": "Khảm = Mưa. Ly = Nắng", "cach_xem": "Khảm vượng = Mưa", "trong_so": 75, "vi_du": "Khảm vượng = Mưa"},
+        "luc_hao": {"dung_than": "Hào Tử Tôn", "giai_thich": "Tử Tôn = Thời tiết", "cach_xem": "Tử Tôn động = Thời tiết đổi", "trong_so": 60, "vi_du": "Tử Tôn động = Thời tiết đổi"}
+    },
+    "Vận Mệnh Năm": {
+        "muc_tieu": "Xem vận mệnh cả năm",
+        "ky_mon": {"dung_than": "Can Năm + Can Ngày", "giai_thich": "Can Năm = Vận năm", "cach_xem": "Can Năm sinh Can Ngày = Năm tốt", "trong_so": 75, "vi_du": "Can Năm vượng = Vận Mệnh Năm tốt"},
+        "mai_hoa": {"dung_than": "Bản Quẻ", "giai_thich": "Bản Quẻ = Vận mệnh", "cach_xem": "Bản Quẻ cát = Năm tốt", "trong_so": 70, "vi_du": "Bản Quẻ cát = Năm tốt"},
+        "luc_hao": {"dung_than": "Thế", "giai_thich": "Thế = Bản thân", "cach_xem": "Thế vượng = Năm tốt", "trong_so": 70, "vi_du": "Thế vượng = Năm tốt"}
+    },
+}

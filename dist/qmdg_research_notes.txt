@@ -1,0 +1,7 @@
+# Checkpoint for QMDG analysis refinement
+# Goal: Make interpretations more professional and realistic.
+# Researching standard QMDG meanings for:
+# - Business: Sheng Men (Life Door) as profit, Wu (Stem) as capital.
+# - Marriage: Liu He (Six Harmonies) as marriage/relationship, Geng/Yi as Husband/Wife.
+# - Legal: Jing Men (Scenery Door) as evidence/documents, Jing Men (Alarm Door) as lawsuit/fear.
+# - Health: Tian Rui (Star) as illness, Tian Xin/Yi (Doctor/Medicine).
