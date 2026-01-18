@@ -2,6 +2,7 @@ import streamlit as st
 import sys
 import os
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from PIL import Image
 
 # Add dist directory to Python path
@@ -283,12 +284,16 @@ with st.sidebar:
         use_current_time = st.checkbox("Sử dụng giờ hiện tại", value=True)
         
         if use_current_time:
-            now = datetime.now()
+            # Use Vietnam timezone (UTC+7)
+            vn_tz = ZoneInfo("Asia/Ho_Chi_Minh")
+            now = datetime.now(vn_tz)
             selected_datetime = now
         else:
-            selected_date = st.date_input("Chọn ngày:", datetime.now())
-            selected_time = st.time_input("Chọn giờ:", datetime.now().time())
-            selected_datetime = datetime.combine(selected_date, selected_time)
+            vn_tz = ZoneInfo("Asia/Ho_Chi_Minh")
+            now_vn = datetime.now(vn_tz)
+            selected_date = st.date_input("Chọn ngày:", now_vn.date())
+            selected_time = st.time_input("Chọn giờ:", now_vn.time())
+            selected_datetime = datetime.combine(selected_date, selected_time, tzinfo=vn_tz)
         
         # Calculate QMDG parameters
         try:
