@@ -29,6 +29,13 @@ try:
     from mai_hoa_dich_so import tinh_qua_theo_thoi_gian, tinh_qua_ngau_nhien, giai_qua
     from luc_hao_kinh_dich import lap_qua_luc_hao
     
+    # Import Gemini AI helper
+    try:
+        from gemini_helper import GeminiQMDGHelper
+        GEMINI_AVAILABLE = True
+    except ImportError:
+        GEMINI_AVAILABLE = False
+    
     try:
         from dung_than_200_chu_de_day_du import (
             DUNG_THAN_200_CHU_DE,
@@ -159,7 +166,7 @@ apply_zoom()
 # AUTHENTICATION
 # ======================================================================
 def check_password():
-    """Returns `True` if the user had the correct password."""
+    """Returns True if the user had the correct password."""
     
     def password_entered():
         """Checks whether a password entered by the user is correct."""
@@ -274,6 +281,44 @@ with st.sidebar:
         st.session_state.current_view = "mai_hoa"
     else:
         st.session_state.current_view = "luc_hao"
+    
+    
+    st.markdown("---")
+    
+    # Gemini AI Assistant Configuration
+    if GEMINI_AVAILABLE:
+        st.markdown("### 🤖 AI Assistant (Gemini)")
+        
+        gemini_api_key = st.text_input(
+            "Gemini API Key:",
+            type="password",
+            help="Lấy API key miễn phí tại: https://makersuite.google.com/app/apikey",
+            key="gemini_api_key"
+        )
+        
+        if gemini_api_key:
+            try:
+                if 'gemini_helper' not in st.session_state or st.session_state.get('gemini_key') != gemini_api_key:
+                    st.session_state.gemini_helper = GeminiQMDGHelper(gemini_api_key)
+                    st.session_state.gemini_key = gemini_api_key
+                st.success("✅ AI đã sẵn sàng!")
+                st.info("💡 Click nút '🤖 Hỏi AI' ở mỗi cung để được giải thích chi tiết")
+            except Exception as e:
+                st.error(f"❌ Lỗi kết nối AI: {str(e)}")
+        else:
+            st.warning("⚠️ Nhập API key để sử dụng AI")
+            with st.expander("📖 Hướng dẫn lấy API key"):
+                st.markdown("""
+                **Bước 1:** Truy cập https://makersuite.google.com/app/apikey
+                
+                **Bước 2:** Đăng nhập Google
+                
+                **Bước 3:** Click "Create API Key"
+                
+                **Bước 4:** Copy và paste vào ô trên
+                
+                **Miễn phí:** 60 requests/phút
+                """)
     
     st.markdown("---")
     
@@ -544,23 +589,80 @@ if st.session_state.current_view == "ky_mon":
                             # Star description
                             star_data = KY_MON_DATA['DU_LIEU_DUNG_THAN_PHU_TRO']['CUU_TINH'].get(sao, {})
                             if star_data:
-                                st.markdown(f"**⭐ {sao}:** {star_data.get('Tính_Chất', 'N/A')}")
+                                col_sao_1, col_sao_2 = st.columns([3, 1])
+                                with col_sao_1:
+                                    st.markdown(f"**⭐ {sao}:** {star_data.get('Tính_Chất', 'N/A')}")
+                                with col_sao_2:
+                                    if 'gemini_helper' in st.session_state:
+                                        if st.button(f"🤖 Giải thích {sao}", key=f"ai_star_{palace_num}_{sao}"):
+                                            with st.spinner(f"AI đang giải thích về sao {sao}..."):
+                                                explanation = st.session_state.gemini_helper.explain_element('star', sao)
+                                                st.info(explanation)
                             
                             # Door description
                             if door_data:
-                                st.markdown(f"**🚪 {cua} Môn:** {door_data.get('Luận_Đoán', 'N/A')}")
+                                col_door_1, col_door_2 = st.columns([3, 1])
+                                with col_door_1:
+                                    st.markdown(f"**🚪 {cua} Môn:** {door_data.get('Luận_Đoán', 'N/A')}")
+                                with col_door_2:
+                                    if 'gemini_helper' in st.session_state:
+                                        if st.button(f"🤖 Giải thích {cua}", key=f"ai_door_{palace_num}_{cua}"):
+                                            with st.spinner(f"AI đang giải thích về cửa {cua}..."):
+                                                explanation = st.session_state.gemini_helper.explain_element('door', cua)
+                                                st.info(explanation)
                             
                             # Deity description
                             deity_data = KY_MON_DATA['DU_LIEU_DUNG_THAN_PHU_TRO']['BAT_THAN'].get(than, {})
                             if deity_data:
-                                st.markdown(f"**👤 {than}:** {deity_data.get('Tính_Chất', 'N/A')}")
+                                col_than_1, col_than_2 = st.columns([3, 1])
+                                with col_than_1:
+                                    st.markdown(f"**👤 {than}:** {deity_data.get('Tính_Chất', 'N/A')}")
+                                with col_than_2:
+                                    if 'gemini_helper' in st.session_state:
+                                        if st.button(f"🤖 Giải thích {than}", key=f"ai_than_{palace_num}_{than}"):
+                                            with st.spinner(f"AI đang giải thích về thần {than}..."):
+                                                explanation = st.session_state.gemini_helper.explain_element('deity', than)
+                                                st.info(explanation)
                             
                             # Stem combination
                             cach_cuc_key = can_thien + can_dia
                             combination_data = KY_MON_DATA['TRUCTU_TRANH'].get(cach_cuc_key, {})
                             if combination_data:
-                                st.markdown(f"**🔗 {can_thien}/{can_dia}:** {combination_data.get('Luận_Giải', 'Chưa có nội dung')}")
-                                st.caption(f"Cát/Hung: {combination_data.get('Cát_Hung', 'Bình')}")
+                                col_can_1, col_can_2 = st.columns([3, 1])
+                                with col_can_1:
+                                    st.markdown(f"**🔗 {can_thien}/{can_dia}:** {combination_data.get('Luận_Giải', 'Chưa có nội dung')}")
+                                    st.caption(f"Cát/Hung: {combination_data.get('Cát_Hung', 'Bình')}")
+                                with col_can_2:
+                                    if 'gemini_helper' in st.session_state:
+                                        if st.button(f"🤖 Giải thích {can_thien}/{can_dia}", key=f"ai_can_{palace_num}_{can_thien}_{can_dia}"):
+                                            with st.spinner(f"AI đang giải thích về tổ hợp {can_thien}/{can_dia}..."):
+                                                explanation = st.session_state.gemini_helper.explain_element('stem', f"{can_thien}/{can_dia}")
+                                                st.info(explanation)
+                            
+                            # AI Analysis Button
+                            if 'gemini_helper' in st.session_state:
+                                st.markdown("---")
+                                if st.button(f"🤖 Hỏi AI về Cung {palace_num}", key=f"ai_palace_{palace_num}", type="primary"):
+                                    with st.spinner("🤖 AI đang phân tích..."):
+                                        palace_data = {
+                                            'num': palace_num,
+                                            'qua': QUAI_TUONG.get(palace_num, 'N/A'),
+                                            'hanh': hanh,
+                                            'star': sao,
+                                            'door': cua,
+                                            'deity': than,
+                                            'can_thien': can_thien,
+                                            'can_dia': can_dia
+                                        }
+                                        try:
+                                            analysis = st.session_state.gemini_helper.analyze_palace(
+                                                palace_data,
+                                                selected_topic
+                                            )
+                                            st.markdown("### 🤖 Phân Tích AI")
+                                            st.markdown(analysis)
+                                        except Exception as e:
+                                            st.error(f"❌ Lỗi: {str(e)}")
 
         
         # Display Dụng Thần info
@@ -706,6 +808,31 @@ if st.session_state.current_view == "ky_mon":
                         if 'du_doan_thoi_gian' in comparison_result:
                             with st.expander("⏰ Dự Đoán Thời Gian"):
                                 st.write(comparison_result['du_doan_thoi_gian'])
+                        
+                        # AI Comparison Analysis
+                        if 'gemini_helper' in st.session_state:
+                            st.markdown("---")
+                            if st.button("🤖 AI Phân Tích So Sánh", key="ai_compare_btn", type="primary"):
+                                with st.spinner("🤖 AI đang phân tích so sánh..."):
+                                    try:
+                                        prompt = f"""Bạn là chuyên gia Kỳ Môn Độn Giáp. Hãy phân tích so sánh giữa 2 cung sau cho chủ đề '{selected_topic}':
+                                        
+                                        **Cung Chủ (Cung {chu['so']}):** Sao {chu['sao']}, Môn {chu['cua']}, Thần {chu['than']}, Can {chu['can_thien']}/{chu['can_dia']}
+                                        **Cung Khách (Cung {khach['so']}):** Sao {khach['sao']}, Môn {khach['cua']}, Thần {khach['than']}, Can {khach['can_thien']}/{khach['can_dia']}
+                                        **Mối quan hệ ngũ hành:** {interaction}
+                                        
+                                        Hãy giải thích rõ:
+                                        1. Vị thế bên nào mạnh hơn?
+                                        2. Thuận lợi và khó khăn của mỗi bên.
+                                        3. Kết quả dự đoán và lời khuyên cụ thể.
+                                        
+                                        Trả lời ngắn gọn, thực tế bằng tiếng Việt."""
+                                        
+                                        analysis = st.session_state.gemini_helper.model.generate_content(prompt).text
+                                        st.markdown("### 🤖 Phân Tích So Sánh AI")
+                                        st.markdown(analysis)
+                                    except Exception as e:
+                                        st.error(f"❌ Lỗi: {str(e)}")
                         
                     except ImportError:
                         # Fallback to simple comparison
@@ -858,6 +985,58 @@ PHÂN TÍCH LIÊN MẠCH:
                         st.error(f"Lỗi tạo báo cáo: {e}")
                         import traceback
                         st.code(traceback.format_exc())
+
+            # AI Comprehensive Analysis
+            if 'gemini_helper' in st.session_state and st.session_state.chart_data:
+                st.markdown("---")
+                st.markdown("### 🤖 PHÂN TÍCH TỔNG HỢP BẰNG AI")
+                
+                if st.button("💬 Phân Tích Toàn Bàn Bằng AI", type="primary", key="ai_comprehensive"):
+                    with st.spinner("🤖 AI đang phân tích toàn bộ bàn..."):
+                        try:
+                            # Get Dụng Thần info
+                            topic_data = TOPIC_INTERPRETATIONS.get(selected_topic, {})
+                            dung_than_list = topic_data.get("Dụng_Thần", [])
+                            
+                            analysis = st.session_state.gemini_helper.comprehensive_analysis(
+                                st.session_state.chart_data,
+                                selected_topic,
+                                dung_than_list
+                            )
+                            
+                            st.success("**🤖 Phân Tích Tổng Hợp:**")
+                            st.markdown(analysis)
+                        except Exception as e:
+                            st.error(f"❌ Lỗi: {str(e)}")
+            
+            # AI Q&A Section
+            if 'gemini_helper' in st.session_state and st.session_state.chart_data:
+                st.markdown("---")
+                st.markdown("### ❓ HỎI AI VỀ BÀN NÀY")
+                
+                user_question = st.text_area(
+                    "Câu hỏi của bạn:",
+                    placeholder="Ví dụ: Tôi nên làm gì để tăng vận may? Thời điểm nào tốt nhất?",
+                    key="ai_question"
+                )
+                
+                if st.button("🤖 Hỏi AI", key="ai_ask", type="primary"):
+                    if user_question:
+                        with st.spinner("🤖 AI đang suy nghĩ..."):
+                            try:
+                                answer = st.session_state.gemini_helper.answer_question(
+                                    user_question,
+                                    st.session_state.chart_data,
+                                    selected_topic
+                                )
+                                st.info(f"**🤖 Trả lời:**
+
+{answer}")
+                            except Exception as e:
+                                st.error(f"❌ Lỗi: {str(e)}")
+                    else:
+                        st.warning("⚠️ Vui lòng nhập câu hỏi")
+
 
 
 elif st.session_state.current_view == "mai_hoa":
@@ -1074,4 +1253,4 @@ st.markdown("""
     <p>© 2026 Vũ Việt Cường - Kỳ Môn Độn Giáp Web Application</p>
     <p>🌐 Chạy 24/7 trên Streamlit Cloud</p>
 </div>
-""", unsafe_allow_html=True)
+""");
