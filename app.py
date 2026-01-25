@@ -1246,11 +1246,33 @@ if st.session_state.current_view == "ky_mon":
                                 # Get interpretation hints
                                 topic_hints = TOPIC_INTERPRETATIONS.get(selected_topic, {}).get("Luận_Giải_Gợi_Ý", "")
                                 
+                                # Resolve Dynamic Actors (Chủ - Khách)
+                                # The Subject (Chủ thể/Người thực hiện) is the person we are asking ABOUT.
+                                rel_type = st.session_state.get('selected_doi_tuong', "🧑 Bản thân")
+                                subj_stem = st.session_state.chart_data.get('can_ngay') # Default to Self
+                                obj_stem = st.session_state.chart_data.get('can_gio') # Default to General Matter/Other Party
+                                
+                                if "Anh chị em" in rel_type:
+                                    subj_stem = st.session_state.chart_data.get('can_thang')
+                                elif "Bố mẹ" in rel_type:
+                                    subj_stem = st.session_state.chart_data.get('can_nam')
+                                elif "Con cái" in rel_type:
+                                    subj_stem = st.session_state.chart_data.get('can_gio')
+                                elif "Người lạ" in rel_type:
+                                    custom_val = st.session_state.get('target_stem_name_custom', "Giáp")
+                                    if "Không rõ" not in custom_val:
+                                        subj_stem = custom_val
+                                
+                                # In triangular logic (e.g., Sibling selling to someone), 
+                                # the 'Subject' is the relative, and 'Object' remains the Hour Stem (Buyer/Stranger).
+                                
                                 analysis = st.session_state.gemini_helper.comprehensive_analysis(
                                     st.session_state.chart_data,
                                     selected_topic,
                                     dung_than_list,
-                                    topic_hints
+                                    topic_hints,
+                                    subj_stem=subj_stem,
+                                    obj_stem=obj_stem
                                 )
                                 st.markdown(f'<div class="expert-box">{analysis}</div>', unsafe_allow_html=True)
                             except Exception as e:

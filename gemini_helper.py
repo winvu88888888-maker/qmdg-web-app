@@ -210,16 +210,17 @@ Trả lời súc tích, đi thẳng vào vấn đề, không chào hỏi, không
         except Exception as e:
             return f"❌ Lỗi khi gọi AI: {str(e)}\n\nVui lòng kiểm tra API key hoặc thử lại."
     
-    def comprehensive_analysis(self, chart_data, topic, dung_than_info=None, topic_hints=""):
+    def comprehensive_analysis(self, chart_data, topic, dung_than_info=None, topic_hints="", subj_stem=None, obj_stem=None):
         """
         Laser-Focused Analysis: Interaction between specific Dụng Thần palaces.
+        With Dynamic Subject (Chủ) and Object (Khách) identification.
         """
         # Update context
         self.update_context(
             topic=topic,
             chart_data=chart_data,
             dung_than=dung_than_info or [],
-            last_action="Luận giải đa tầng Laser-Focused"
+            last_action="Luận giải đa tầng Laser-Focused (Dynamic Actors)"
         )
         
         can_ngay = chart_data.get('can_ngay', 'N/A')
@@ -227,6 +228,10 @@ Trả lời súc tích, đi thẳng vào vấn đề, không chào hỏi, không
         truc_phu = chart_data.get('truc_phu_ten', 'N/A')
         truc_su = chart_data.get('truc_su_ten', 'N/A')
         khong_vong = chart_data.get('khong_vong', [])
+        
+        # Determine actual actors for this session
+        final_subj_stem = subj_stem if subj_stem else can_ngay
+        final_obj_stem = obj_stem if obj_stem else can_gio
         
         # 1. GROUP DATA BY PALACE
         palaces_of_interest = {} # {palace_num: {info}}
@@ -246,17 +251,17 @@ Trả lời súc tích, đi thẳng vào vấn đề, không chào hỏi, không
             if label not in palaces_of_interest[p_num]['labels']:
                 palaces_of_interest[p_num]['labels'].append(label)
 
-        # Scan all palaces for Useful Gods
+        # Scan all palaces for actors and Useful Gods
         for i in range(1, 10):
-            # Check Self (Can Ngay)
-            if chart_data.get('can_thien_ban', {}).get(i) == can_ngay:
-                add_to_poi(i, f"Bản Thân ({can_ngay})")
+            # 1. Check Subject (Self/As selected)
+            if chart_data.get('can_thien_ban', {}).get(i) == final_subj_stem:
+                add_to_poi(i, f"Bản Thân/Chủ Thể ({final_subj_stem})")
             
-            # Check Outcome (Can Gio)
-            if chart_data.get('can_thien_ban', {}).get(i) == can_gio:
-                add_to_poi(i, f"Đối Tượng/Kết Quả ({can_gio})")
+            # 2. Check Object (Target/As selected)
+            if chart_data.get('can_thien_ban', {}).get(i) == final_obj_stem:
+                add_to_poi(i, f"Đối Tượng/Khách ({final_obj_stem})")
             
-            # Check other Dụng Thần
+            # 3. Check other Dụng Thần
             if dung_than_info:
                 for dt in dung_than_info:
                     door_val = chart_data.get('nhan_ban', {}).get(i)
@@ -277,12 +282,15 @@ Trả lời súc tích, đi thẳng vào vấn đề, không chào hỏi, không
                     f"Cặp Can: {info['can_thien']}/{info['can_dia']}{void_str}")
             poi_desc.append(desc)
 
-        prompt = f"""{self.get_context_prompt()}Bạn là bậc thầy Kỳ Môn Độn Giáp cao cấp. Hãy thực hiện LUẬN GIẢI CHUYÊN SÂU ĐA TẦNG cho chủ đề: **{topic}**.
+        prompt = f"""{self.get_context_prompt()}Bạn là bậc thầy Kỳ Môn Độn Giáp cao cấp. Hãy thực hiện LUẬN GIẢI CHUYÊN SÂU TAM GIÁC cho chủ đề: **{topic}**.
 
 **NGUYÊN TẮC LUẬN GIẢI BẮT BUỘC:**
-1. **Phân tích Nội Tại (Quan trọng)**: Trước khi so sánh, hãy đánh giá "sức mạnh nội tại" của từng cung dưới đây. Xem Sao/Môn/Thần bên trong cung đó có đang "đồng lòng" hay "xung đột" (ví dụ: Môn khắc Cung, hoặc Thần trợ Tinh).
-2. **Xác định vai trò**: Dựa vào nhãn Dụng Thần (ví dụ: Khai Môn, Can Giờ...), hãy chỉ rõ cung đó đại diện cho ai/cái gì trong chủ đề "{topic}".
-3. **Kết luận logic**: Một cung mạnh sinh cho bạn thì rất tốt, nhưng một cung yếu sinh cho bạn thì chỉ là hữu danh vô thực. Hãy đánh giá kỹ điều này.
+1. **Phân tích Nội Tại (Quan trọng)**: Đánh giá sức mạnh nội tại của **Chủ Thể ({final_subj_stem})** - người chúng ta đang hỏi giúp. Họ có đủ lực, đủ thuận lợi để thực hiện việc này không?
+2. **Luận giải Tam Giác (Triangular Logic)**: Phân tích sự tương tác giữa 3 đỉnh: 
+   - Đỉnh 1: **Chủ Thể ({final_subj_stem})** - Đại diện cho người thân/người hỏi.
+   - Đỉnh 2: **Đối Tượng ({final_obj_stem})** - Đại diện cho người mua/đối thủ/người lạ.
+   - Đỉnh 3: **Dụng Thần Topic** - Đại diện cho cái nhà/tiền bạc/kết quả ({topic}).
+3. **Kết luận logic**: Liệu Chủ Thể có thắng được Đối Tượng để chiếm lấy kết quả không?
 
 **DỮ LIỆU CÁC CUNG TRỌNG TÂM:**
 {chr(10).join(poi_desc)}
@@ -290,16 +298,16 @@ Trả lời súc tích, đi thẳng vào vấn đề, không chào hỏi, không
 **THẾ TRẬN TỔNG THỂ:**
 - Xu thế (Trực Phù): {truc_phu}
 - Chấp hành (Trực Sử): {truc_su}
-- Gợi ý định hướng: "{topic_hints}"
+- Gợi ý chuyên môn: "{topic_hints}"
 
-**NỘI DUNG BÁO CÁO (SÚC TÍCH - SẮC BÉN):**
+**NỘI DUNG BÁO CÁO (SÚC TÍCH - QUYỀN LỰC):**
 
-- **PHẦN 1: ĐÁNH GIÁ NỘI TẠI CUNG**: Mỗi cung được liệt kê ở trên đang Mạnh hay Yếu? Sự vận hành bên trong cung đó báo hiệu điều gì cho nhân tố nó đại diện?
-- **PHẦN 2: TƯƠNG TÁC ĐA DIỆN**: Sự tương tác giữa các cung này (Sinh/Khắc). Bản thân bạn có nắm được "thiên thời, địa lợi" từ các cung Dụng Thần không?
-- **PHẦN 3: PHÁN QUYẾT & CHIẾN THUẬT**: Kết quả cuối cùng là gì? Dựa trên bối cảnh "{topic_hints}", bạn cần hành động thế nào để thắng thế?
-- **PHẦN 4: ỨNG KỲ**: Thời điểm mấu chốt.
+- **PHẦN 1: TRẠNG THÁI CỦA NGƯỜI ĐƯỢC XEM ({final_subj_stem})**: Người này đang mạnh hay yếu? Cung của họ có thuận lợi hay đang gặp khó khăn nội tại?
+- **PHẦN 2: TƯƠNG TÁC TAM GIÁC**: Phân tích quan hệ Sinh/Khắc giữa Người này vs Đối tượng vs Dụng thần chủ đề.
+- **PHẦN 3: PHÁN QUYẾT CUỐI CÙNG**: Dựa trên bối cảnh "{topic_hints}", người này có đạt được mục đích không? Tại sao?
+- **PHẦN 4: CHIẾN THUẬT & ỨNG KỲ**: Phải làm gì để giúp người này đạt mục tiêu nhanh nhất? Khi nào?
 
-Trả lời bằng phong thái chuyên gia, ngôn ngữ sắc bén, tập trung hoàn toàn vào việc giải quyết vấn đề."""
+Trả lời bằng phong thái chuyên gia, tập trung hoàn toàn vào việc giải quyết vấn đề cho Chủ Thể."""
 
         try:
             return self._call_ai(prompt)
