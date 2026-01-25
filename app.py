@@ -397,8 +397,13 @@ with st.sidebar:
     
     # Gemini AI Configuration - Auto-load if available
     if 'gemini_helper' not in st.session_state:
-        # 1. Try Secrets
-        secret_api_key = st.secrets.get("GEMINI_API_KEY")
+        # Load from custom_data.json first
+        custom_data = load_custom_data()
+        saved_key = custom_data.get("GEMINI_API_KEY")
+        
+        # Then try Streamlit Secrets
+        secret_api_key = st.secrets.get("GEMINI_API_KEY", saved_key)
+        
         if secret_api_key and GEMINI_AVAILABLE:
             try:
                 st.session_state.gemini_helper = GeminiQMDGHelper(secret_api_key)
@@ -423,20 +428,33 @@ with st.sidebar:
                     else: st.error(msg)
             
             new_key = st.text_input("Thay đổi API Key (Tùy chọn):", type="password", key="new_api_key")
+            save_permanently = st.checkbox("Lưu khóa này vĩnh viễn", value=True)
+            
             if st.button("Cập nhật Key mới"):
-                try:
-                    st.session_state.gemini_helper = GeminiQMDGHelper(new_key)
-                    st.session_state.gemini_key = new_key
-                    st.session_state.ai_type = "Gemini Pro (Cá nhân)"
-                    st.success("✅ Đã cập nhật!")
-                    st.rerun()
-                except Exception as e:
-                    st.error(f"❌ Lỗi: {e}")
+                if new_key:
+                    try:
+                        st.session_state.gemini_helper = GeminiQMDGHelper(new_key)
+                        st.session_state.gemini_key = new_key
+                        st.session_state.ai_type = "Gemini Pro (Cá nhân)"
+                        
+                        if save_permanently:
+                            data = load_custom_data()
+                            data["GEMINI_API_KEY"] = new_key
+                            save_custom_data(data)
+                            st.success("✅ Đã cập nhật và Lưu vĩnh viễn!")
+                        else:
+                            st.success("✅ Đã cập nhật (Tạm thời)!")
+                        st.rerun()
+                    except Exception as e:
+                        st.error(f"❌ Lỗi: {e}")
+                else:
+                    st.warning("Vui lòng nhập Key.")
     else:
         st.warning(f"ℹ️ {ai_status}")
         with st.expander("🔑 Kích hoạt Gemini Pro (Thông minh hơn)", expanded=True):
             st.markdown("👉 [Lấy API Key miễn phí](https://aistudio.google.com/app/apikey)")
             user_api_key = st.text_input("Dán API Key vào đây:", type="password", key="input_api_key_sidebar")
+            save_key_permanently = st.checkbox("Lưu khóa này vĩnh viễn", value=True, key="save_key_checkbox")
             
             if st.button("Kích hoạt ngay", type="primary"):
                 if GEMINI_AVAILABLE and user_api_key:
@@ -444,7 +462,14 @@ with st.sidebar:
                         st.session_state.gemini_helper = GeminiQMDGHelper(user_api_key)
                         st.session_state.gemini_key = user_api_key
                         st.session_state.ai_type = "Gemini Pro (Active)"
-                        st.success("✅ Thành công!")
+                        
+                        if save_key_permanently:
+                            data = load_custom_data()
+                            data["GEMINI_API_KEY"] = user_api_key
+                            save_custom_data(data)
+                            st.success("✅ Thành công và Đã Lưu!")
+                        else:
+                            st.success("✅ Thành công!")
                         st.rerun()
                     except Exception as e:
                         st.error(f"❌ Lỗi: {e}")
