@@ -727,7 +727,9 @@ if st.session_state.current_view == "ky_mon":
                 'khong_vong': khong_vong,
                 'dich_ma': dich_ma,
                 'can_gio': can_gio,
-                'can_ngay': params['can_ngay']
+                'can_ngay': params['can_ngay'],
+                'can_thang': params.get('can_thang', 'N/A'),
+                'can_nam': params.get('can_nam', 'N/A')
             }
             
         except Exception as e:
@@ -861,7 +863,43 @@ if st.session_state.current_view == "ky_mon":
                             # Check Dụng Thần with clearer explanation
                             topic_data = TOPIC_INTERPRETATIONS.get(selected_topic, {})
                             dung_than_list = topic_data.get("Dụng_Thần", [])
-                            found_dt = [dt for dt in dung_than_list if dt in [sao, cua, than, can_thien, can_dia]]
+                            
+                            # Advanced Matching Logic
+                            found_dt = []
+                            actual_can_gio = chart.get('can_gio', 'N/A')
+                            actual_can_ngay = chart.get('can_ngay', 'N/A')
+                            actual_can_thang = chart.get('can_thang', 'N/A')
+                            actual_can_nam = chart.get('can_nam', 'N/A')
+                            
+                            for dt in dung_than_list:
+                                is_match = False
+                                # 1. Check direct matches (Star, Deity, Stems)
+                                if dt in [sao, than, can_thien, can_dia]:
+                                    is_match = True
+                                # 2. Check Doors (Normalize "Sinh" vs "Sinh Môn")
+                                elif dt == cua or dt == f"{cua} Môn" or (cua and dt.startswith(cua)):
+                                    is_match = True
+                                # 3. Check Symbolic Stems
+                                elif dt == "Can Giờ" and (actual_can_gio in [can_thien, can_dia]):
+                                    dt = f"Can Giờ ({actual_can_gio})"
+                                    is_match = True
+                                elif dt == "Can Ngày" and (actual_can_ngay in [can_thien, can_dia]):
+                                    dt = f"Can Ngày ({actual_can_ngay})"
+                                    is_match = True
+                                elif dt == "Can Tháng" and (actual_can_thang in [can_thien, can_dia]):
+                                    dt = f"Can Tháng ({actual_can_thang})"
+                                    is_match = True
+                                elif dt == "Can Năm" and (actual_can_nam in [can_thien, can_dia]):
+                                    dt = f"Can Năm ({actual_can_nam})"
+                                    is_match = True
+                                # 4. Check Special Markers
+                                elif dt == "Mã Tinh" and palace_num == chart.get('dich_ma'):
+                                    is_match = True
+                                elif dt == "Không Vong" and palace_num in chart.get('khong_vong', []):
+                                    is_match = True
+                                
+                                if is_match:
+                                    found_dt.append(dt)
                             
                             dt_html = f"""
                             <div class="dung-than-box">
