@@ -850,19 +850,19 @@ if st.session_state.current_view == "ky_mon":
                         p_full_name = f"{palace_num} {QUAI_TUONG.get(palace_num, '')}"
                         if palace_num == 5: p_full_name = "5 Trung Cung"
 
-                        # --- RENDER PALACE CARD (MAX ALIGNMENT & CLARITY) ---
+                        # --- RENDER PALACE CARD (FINAL AESTHETIC POLISH) ---
                         palace_html = f"""<div class="palace-3d animated-panel">
 <div class="palace-inner {'dung-than-active' if has_dung_than else ''}" style="{bg_style} border: {border_width} solid {element_configs['border']}; min-height: 280px; position: relative;">
 <div class="glass-overlay"></div>
 <div class="palace-header-row"><span class="palace-title">{p_full_name}</span>{status_badge}</div>
-<div class="palace-grid-container" style="position: relative; height: 210px; padding: 0;">
-<div class="grid-cell top-right" style="position: absolute; top: 0; right: 8px; color: {c_thien};">{can_thien}</div>
-<div class="grid-cell mid-left" style="position: absolute; top: 50%; left: 8px; transform: translateY(-50%); color: {c_sao};">{sao.replace('Thiên ', '')}</div>
-<div class="grid-cell center-deity" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: {c_than};">{than}</div>
-<div class="grid-cell bot-center" style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); color: {c_cua};">{cua.replace(' Môn', '')}</div>
-<div class="grid-cell bot-right" style="position: absolute; bottom: 0; right: 8px; color: {c_dia};">{can_dia}</div>
+<div class="palace-grid-container" style="position: relative; height: 180px; padding: 0;">
+<div class="grid-cell top-right" style="position: absolute; top: -8px; right: 5px; color: {c_thien};">{can_thien}</div>
+<div class="grid-cell mid-left" style="position: absolute; top: 45%; left: 5px; transform: translateY(-50%); color: {c_sao};">{sao.replace('Thiên ', '')}</div>
+<div class="grid-cell center-deity" style="position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); color: {c_than};">{than}</div>
+<div class="grid-cell bot-center" style="position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); color: {c_cua};">{cua.replace(' Môn', '')}</div>
+<div class="grid-cell bot-right" style="position: absolute; bottom: -10px; right: 5px; color: {c_dia};">{can_dia}</div>
 </div>
-<div class="palace-footer-markers" style="font-size: 1.85rem;">
+<div class="palace-footer-markers" style="font-size: 3rem; margin-top: 10px; line-height: 1;">
 {f'<span style="color:#64748b;">⚪</span>' if palace_num in chart['khong_vong'] else ''}
 {f'<span style="color:#f59e0b;">🐎</span>' if palace_num == chart['dich_ma'] else ''}
 </div></div></div>"""
