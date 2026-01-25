@@ -1381,9 +1381,14 @@ PHÂN TÍCH LIÊN MẠCH:
                 if st.button("💬 Phân Tích Toàn Bàn Bằng AI", type="primary", key="ai_comprehensive"):
                     with st.spinner("🤖 AI đang phân tích toàn bộ bàn..."):
                         try:
-                            # Get Dụng Thần info
-                            topic_data = TOPIC_INTERPRETATIONS.get(selected_topic, {})
-                            dung_than_list = topic_data.get("Dụng_Thần", [])
+                            # Get Dụng Thần info from the best available source
+                            dung_than_list = []
+                            if 'USE_200_TOPICS' in globals() and USE_200_TOPICS:
+                                dung_than_list = lay_dung_than_200(selected_topic)
+                            
+                            if not dung_than_list:
+                                topic_data = TOPIC_INTERPRETATIONS.get(selected_topic, {})
+                                dung_than_list = topic_data.get("Dụng_Thần", [])
                             
                             analysis = st.session_state.gemini_helper.comprehensive_analysis(
                                 st.session_state.chart_data,
