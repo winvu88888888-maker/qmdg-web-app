@@ -873,33 +873,38 @@ if st.session_state.current_view == "ky_mon":
                             
                             for dt in dung_than_list:
                                 is_match = False
+                                display_name = dt
+                                
                                 # 1. Check direct matches (Star, Deity, Stems)
-                                if dt in [sao, than, can_thien, can_dia]:
+                                if dt in [sao, than]:
                                     is_match = True
                                 # 2. Check Doors (Normalize "Sinh" vs "Sinh Môn")
                                 elif dt == cua or dt == f"{cua} Môn" or (cua and dt.startswith(cua)):
                                     is_match = True
-                                # 3. Check Symbolic Stems
-                                elif dt == "Can Giờ" and (actual_can_gio in [can_thien, can_dia]):
-                                    dt = f"Can Giờ ({actual_can_gio})"
+                                # 3. Check Symbolic Stems (PRECISION: Only Heaven Plate)
+                                elif dt == "Can Giờ" and (actual_can_gio == can_thien):
+                                    display_name = f"Can Giờ ({actual_can_gio} - Sự việc)"
                                     is_match = True
-                                elif dt == "Can Ngày" and (actual_can_ngay in [can_thien, can_dia]):
-                                    dt = f"Can Ngày ({actual_can_ngay})"
+                                elif dt == "Can Ngày" and (actual_can_ngay == can_thien):
+                                    display_name = f"Can Ngày ({actual_can_ngay} - Bản thân)"
                                     is_match = True
-                                elif dt == "Can Tháng" and (actual_can_thang in [can_thien, can_dia]):
-                                    dt = f"Can Tháng ({actual_can_thang})"
+                                elif dt == "Can Tháng" and (actual_can_thang == can_thien):
+                                    display_name = f"Can Tháng ({actual_can_thang})"
                                     is_match = True
-                                elif dt == "Can Năm" and (actual_can_nam in [can_thien, can_dia]):
-                                    dt = f"Can Năm ({actual_can_nam})"
+                                elif dt == "Can Năm" and (actual_can_nam == can_thien):
+                                    display_name = f"Can Năm ({actual_can_nam})"
                                     is_match = True
-                                # 4. Check Special Markers
+                                # 4. Check Stems directly if they are on Heaven Plate
+                                elif dt in ["Nhâm", "Quý", "Ất", "Bính", "Đinh", "Mậu", "Kỷ", "Canh", "Tân"] and (dt == can_thien):
+                                    is_match = True
+                                # 5. Check Special Markers
                                 elif dt == "Mã Tinh" and palace_num == chart.get('dich_ma'):
                                     is_match = True
                                 elif dt == "Không Vong" and palace_num in chart.get('khong_vong', []):
                                     is_match = True
                                 
                                 if is_match:
-                                    found_dt.append(dt)
+                                    found_dt.append(display_name)
                             
                             dt_html = f"""
                             <div class="dung-than-box">
