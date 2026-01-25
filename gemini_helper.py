@@ -182,39 +182,21 @@ class GeminiQMDGHelper:
         
         context = self.get_context_prompt()
         
-        prompt = f"""{context}Bạn là chuyên gia Kỳ Môn Độn Giáp với kiến thức sâu rộng về dịch học Trung Hoa.
+        prompt = f"""{context}Bạn là chuyên gia Kỳ Môn Độn Giáp hàng đầu.
 
-Hãy phân tích cung sau một cách chi tiết và dễ hiểu:
+Hãy phân tích Cung {palace_data.get('num', 'N/A')} này một cách CHUYÊN SÂU theo đúng chủ đề: **{topic}**.
 
 **Thông tin cung:**
-- Cung số: {palace_data.get('num', 'N/A')}
-- Quái tượng: {palace_data.get('qua', 'N/A')}
-- Ngũ hành: {palace_data.get('hanh', 'N/A')}
-- Tinh (Sao): {palace_data.get('star', 'N/A')}
-- Môn (Cửa): {palace_data.get('door', 'N/A')}
-- Thần: {palace_data.get('deity', 'N/A')}
-- Can Thiên: {palace_data.get('can_thien', 'N/A')}
-- Can Địa: {palace_data.get('can_dia', 'N/A')}
+- Sao: {palace_data.get('star', 'N/A')}, Môn: {palace_data.get('door', 'N/A')}, Thần: {palace_data.get('deity', 'N/A')}
+- Can: {palace_data.get('can_thien', 'N/A')}/{palace_data.get('can_dia', 'N/A')}
 
-**Chủ đề đang xem:** {topic}
+**Yêu cầu phân tích:**
+1. **Mối liên hệ với chủ đề**: Cung này đóng vai trò gì trong câu chuyện "{topic}"? Nó là cung Dụng Thần, cung Bản Thân hay cung gây ảnh hưởng?
+2. **Luận giải tổ hợp**: Sự kết hợp giữa Sao {palace_data.get('star', 'N/A')} và Môn {palace_data.get('door', 'N/A')} tại đây có giúp ích hay cản trở cho mục tiêu của bạn?
+3. **Thế trận Thần & Can**: Thần {palace_data.get('deity', 'N/A')} và cặp Can {palace_data.get('can_thien', 'N/A')}/{palace_data.get('can_dia', 'N/A')} đang tạo ra cơ hội hay cạm bẫy nào?
+4. **Lời khuyên hành động**: Nếu bạn quan tâm đến "{topic}", bạn cần lưu ý điều gì đặc biệt tại cung này?
 
-Hãy phân tích theo cấu trúc sau:
-
-1. **Ý nghĩa tổng quan**: Cung này đại diện cho điều gì trong chủ đề "{topic}"?
-
-2. **Phân tích các yếu tố**:
-   - Tinh {palace_data.get('star', 'N/A')} mang ý nghĩa gì?
-   - Môn {palace_data.get('door', 'N/A')} báo hiệu điều gì?
-   - Thần {palace_data.get('deity', 'N/A')} ảnh hưởng như thế nào?
-   - Tổ hợp Can {palace_data.get('can_thien', 'N/A')}/{palace_data.get('can_dia', 'N/A')} có ý nghĩa gì?
-
-3. **Tương tác giữa các yếu tố**: Các yếu tố này kết hợp với nhau tạo ra thông điệp gì?
-
-4. **Điềm báo**: Cát hay hung? Mức độ như thế nào?
-
-5. **Lời khuyên cụ thể**: Nên làm gì? Tránh điều gì?
-
-Trả lời bằng tiếng Việt, ngắn gọn nhưng đầy đủ ý nghĩa."""
+Trả lời bằng tiếng Việt, ngắn gọn, súc sắc và mang tính chất tư vấn chuyên môn."""
 
         try:
             return self._call_ai(prompt)

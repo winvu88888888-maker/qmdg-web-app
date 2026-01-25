@@ -951,55 +951,43 @@ if st.session_state.current_view == "ky_mon":
                             """
                             st.markdown(dt_html, unsafe_allow_html=True)
                             
-                            # Star description
+                            # UNIFIED AI EXPERT BUTTON
+                            if 'gemini_helper' in st.session_state:
+                                st.markdown("---")
+                                if st.button(f"🧙 AI Chuyên Gia Tư Vấn Cung {palace_num}", key=f"ai_palace_expert_btn_{palace_num}", use_container_width=True, type="primary"):
+                                    with st.spinner(f"Chuyên gia AI đang phân tích Cung {palace_num} theo chủ đề {selected_topic}..."):
+                                        analysis = st.session_state.gemini_helper.analyze_palace(
+                                            {
+                                                "num": palace_num,
+                                                "qua": QUAI_TUONG.get(palace_num, 'N/A'),
+                                                "hanh": hanh,
+                                                "star": sao,
+                                                "door": cua,
+                                                "deity": than,
+                                                "can_thien": can_thien,
+                                                "can_dia": can_dia
+                                            },
+                                            selected_topic
+                                        )
+                                        st.markdown(f"""
+                                        <div class="interpret-box">
+                                            <div class="interpret-title">🔮 Phân Tích Chuyên Sâu Cung {palace_num}</div>
+                                            <div style="font-size: 15px; line-height: 1.6; color: #1e293b;">{analysis}</div>
+                                        </div>
+                                        """, unsafe_allow_html=True)
+
+                            # Static descriptions (Keep it brief)
+                            st.markdown("---")
                             star_data = KY_MON_DATA['DU_LIEU_DUNG_THAN_PHU_TRO']['CUU_TINH'].get(sao, {})
                             if star_data:
-                                col_sao_1, col_sao_2 = st.columns([3, 1])
-                                with col_sao_1:
-                                    st.markdown(f"**⭐ {sao}:** {star_data.get('Tính_Chất', 'N/A')}")
-                                with col_sao_2:
-                                    show_star_exp = False
-                                    if 'gemini_helper' in st.session_state:
-                                        if st.button(f"🤖 Giải thích {sao}", key=f"ai_star_{palace_num}_{sao}"):
-                                            show_star_exp = True
-                                
-                                if show_star_exp:
-                                    with st.spinner(f"AI đang giải thích về sao {sao}..."):
-                                        explanation = st.session_state.gemini_helper.explain_element('star', sao)
-                                        st.markdown(f"""<div class="interpret-box"><div class="interpret-title">Luận Giải Sao {sao}</div>{explanation}</div>""", unsafe_allow_html=True)
+                                st.markdown(f"**⭐ Sao {sao}:** {star_data.get('Tính_Chất', 'N/A')}")
                             
-                            # Door description
                             if door_data:
-                                col_door_1, col_door_2 = st.columns([3, 1])
-                                with col_door_1:
-                                    st.markdown(f"**🚪 {cua} Môn:** {door_data.get('Tính_Chất', 'N/A')}")
-                                with col_door_2:
-                                    show_door_exp = False
-                                    if 'gemini_helper' in st.session_state:
-                                        if st.button(f"🤖 Giải thích {cua}", key=f"ai_door_{palace_num}_{cua}"):
-                                            show_door_exp = True
-                                
-                                if show_door_exp:
-                                    with st.spinner(f"AI đang giải thích về cửa {cua}..."):
-                                        explanation = st.session_state.gemini_helper.explain_element('door', cua)
-                                        st.markdown(f"""<div class="interpret-box"><div class="interpret-title">Luận Giải Cửa {cua}</div>{explanation}</div>""", unsafe_allow_html=True)
+                                st.markdown(f"**🚪 Cửa {cua}:** {door_data.get('Tính_Chất', 'N/A')}")
                             
-                            # Deity description
                             deity_data = KY_MON_DATA['DU_LIEU_DUNG_THAN_PHU_TRO']['BAT_THAN'].get(than, {})
                             if deity_data:
-                                col_than_1, col_than_2 = st.columns([3, 1])
-                                with col_than_1:
-                                    st.markdown(f"**🛡️ {than}:** {deity_data.get('Tính_Chất', 'N/A')}")
-                                with col_than_2:
-                                    show_than_exp = False
-                                    if 'gemini_helper' in st.session_state:
-                                        if st.button(f"🤖 Giải thích {than}", key=f"ai_deity_{palace_num}_{than}"):
-                                            show_than_exp = True
-                                
-                                if show_than_exp:
-                                    with st.spinner(f"AI đang giải thích về thần {than}..."):
-                                        explanation = st.session_state.gemini_helper.explain_element('deity', than)
-                                        st.markdown(f"""<div class="interpret-box"><div class="interpret-title">Luận Giải Thần {than}</div>{explanation}</div>""", unsafe_allow_html=True)
+                                st.markdown(f"**🛡️ Thần {than}:** {deity_data.get('Tính_Chất', 'N/A')}")
                             
                             # Stem combination
                             cach_cuc_key = can_thien + can_dia
