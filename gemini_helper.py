@@ -124,16 +124,32 @@ class GeminiQMDGHelper:
                 # Fallback to local
         
         # Option 2: Direct Gemini API
-        try:
-            response = self.model.generate_content(prompt)
-            if not response.text:
-                return "⚠️ AI trả về kết quả trống. Thử lại sau hoặc kiểm tra API Key."
-            return response.text
-        except Exception as e:
-            error_msg = str(e)
-            if "finish_reason: SAFETY" in error_msg:
-                return "🛡️ Nội dung bị AI chặn do vi phạm quy tắc an toàn. Thử đặt câu hỏi khác."
-            raise e # Let the helper handle more complex errors if needed
+        import time
+        max_retries = 2
+        for attempt in range(max_retries):
+            try:
+                response = self.model.generate_content(prompt)
+                if not response.text:
+                    return "⚠️ AI trả về kết quả trống. Thử lại sau hoặc kiểm tra API Key."
+                return response.text
+            except Exception as e:
+                error_msg = str(e)
+                # Handle Rate Limit (Quota)
+                if "429" in error_msg or "quota" in error_msg.lower():
+                    if attempt < max_retries - 1:
+                        time.sleep(1) # Wait 1 second and retry once
+                        continue
+                    return "🛑 **Hết hạn mức AI (Quota Exceeded):** Vui lòng đợi khoảng 20-30 giây rồi nhấn nút Luận giải lại. Bản miễn phí có giới hạn số lần gọi mỗi phút."
+                
+                # Handle Safety
+                if "finish_reason: SAFETY" in error_msg or "blocked" in error_msg.lower():
+                    return "🛡️ Nội dung bị AI chặn do quy tắc an toàn. Thử đổi chủ đề hoặc đặt lại câu hỏi."
+                
+                # If it's the last attempt or a different error, return or raise
+                if attempt == max_retries - 1:
+                    return f"❌ Lỗi khi gọi AI: {error_msg}\n\nVui lòng kiểm tra API key hoặc thử lại sau vài giây."
+                time.sleep(0.5)
+        return "❌ Không thể nhận phản hồi từ AI sau nhiều lần thử."
     
     def update_context(self, **kwargs):
         """Update current context"""
