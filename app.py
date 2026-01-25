@@ -820,6 +820,15 @@ if st.session_state.current_view == "ky_mon":
                         current_season = season_map.get(month, "Xuân")
                         strength = phan_tich_yeu_to_thoi_gian(hanh, current_season) if USE_MULTI_LAYER_ANALYSIS else "Bình"
                         
+                        # Element Styles & Backgrounds
+                        element_configs = {
+                            "Mộc": {"img": "moc.png", "border": "#10b981", "glow": "rgba(16, 185, 129, 0.4)", "icon": "🌿"},
+                            "Hỏa": {"img": "hoa.png", "border": "#ef4444", "glow": "rgba(239, 68, 68, 0.4)", "icon": "🔥"},
+                            "Thổ": {"img": "tho.png", "border": "#f59e0b", "glow": "rgba(245, 158, 11, 0.4)", "icon": "⛰️"},
+                            "Kim": {"img": "kim.png", "border": "#94a3b8", "glow": "rgba(148, 163, 184, 0.4)", "icon": "⚔️"},
+                            "Thủy": {"img": "thuy.png", "border": "#3b82f6", "glow": "rgba(59, 130, 246, 0.4)", "icon": "💧"}
+                        }.get(hanh, {"img": "tho.png", "border": "#475569", "glow": "rgba(71, 85, 105, 0.4)", "icon": "✨"})
+
                         # Load Background Image Base64 (Reliable Streamlit Method)
                         bg_path = os.path.join(os.path.dirname(__file__), "web", "static", "img", "elements", element_configs['img'])
                         bg_base64 = get_base64_image(bg_path)
