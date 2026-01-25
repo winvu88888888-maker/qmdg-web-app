@@ -177,25 +177,43 @@ st.markdown("""
         background: linear-gradient(145deg, #334155, #1e293b);
     }
     
-    .ai-response-panel {
-        background: rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(0, 0, 0, 0.05);
-        border-radius: 24px;
-        padding: 25px;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        color: #1e293b;
+    /* Palace 4D & Clarity Enhancements */
+    .palace-3d {
+        perspective: 1200px;
+        margin-bottom: 20px;
+    }
+    
+    .palace-inner {
+        transform-style: preserve-3d;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+        border-radius: 16px;
+        position: relative;
+        background-color: white;
     }
 
-    /* Palace Grid Layout */
+    .palace-inner:hover {
+        transform: translateZ(15px) rotateX(1deg);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+    }
+
+    /* Overlay refinement for Clarity */
+    .glass-overlay {
+        position: absolute; 
+        inset: 0; 
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.05) 100%);
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    /* Grid Layout & Text Clarity */
     .palace-grid-container {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         grid-template-rows: 1fr 1.5fr 1fr;
         height: 180px;
         position: relative;
-        padding: 10px;
+        padding: 5px 12px;
         margin-top: 5px;
     }
 
@@ -203,67 +221,68 @@ st.markdown("""
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: 600;
-        font-size: 0.9rem;
-        transition: transform 0.2s;
+        font-weight: 700;
+        font-size: 0.95rem;
+        text-shadow: 0 0 10px white, 0 0 5px white;
+        z-index: 2;
     }
 
     /* Position Mappings */
-    .top-right { grid-area: 1 / 3 / 2 / 4; justify-content: flex-end; align-items: flex-start; font-size: 1rem; }
+    .top-right { grid-area: 1 / 3 / 2 / 4; justify-content: flex-end; align-items: flex-start; font-size: 1.1rem; }
     .mid-left { grid-area: 2 / 1 / 3 / 2; justify-content: flex-start; }
     .center-deity { 
         grid-area: 2 / 2 / 3 / 3; 
-        font-size: 1.5rem; 
-        font-weight: 800; 
+        font-size: 1.8rem !important; 
+        font-weight: 900 !important; 
         color: #1e293b;
-        text-shadow: 0 0 10px rgba(0,0,0,0.05);
+        filter: drop-shadow(0 0 8px rgba(255,255,255,0.8));
     }
-    .bot-center { grid-area: 3 / 2 / 4 / 3; align-items: flex-end; font-weight: 700; }
+    .bot-center { grid-area: 3 / 2 / 4 / 3; align-items: flex-end; font-size: 1.15rem; }
     .bot-right { 
         grid-area: 3 / 3 / 4 / 4; 
         justify-content: flex-end; 
         align-items: flex-end; 
-        font-size: 1.6rem; 
+        font-size: 1.9rem; 
         font-weight: 900; 
     }
 
     .palace-header-row {
         display: flex;
         justify-content: space-between;
-        padding: 5px 10px;
-        border-bottom: 1px dashed rgba(0,0,0,0.05);
+        padding: 8px 12px;
+        border-bottom: 1px solid rgba(0,0,0,0.04);
+        position: relative;
+        z-index: 2;
     }
 
     .palace-title {
         font-size: 0.75rem;
         font-weight: 800;
-        color: #64748b;
+        color: #475569;
         text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
     .status-badge {
         font-size: 0.65rem;
-        padding: 2px 8px;
-        border-radius: 10px;
-        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-weight: 800;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-    .status-badge.wood { background: #dcfce7; color: #166534; }
-    .status-badge.fire { background: #fee2e2; color: #991b1b; }
-    .status-badge.earth { background: #fef9c3; color: #854d0e; }
-    .status-badge.metal { background: #f1f5f9; color: #334155; }
-    .status-badge.water { background: #e0f2fe; color: #075985; }
 
     .palace-footer-markers {
         display: flex;
         justify-content: flex-start;
-        gap: 10px;
-        padding: 5px 10px;
-        border-top: 1px dotted rgba(0,0,0,0.05);
+        gap: 12px;
+        padding: 8px 12px;
+        position: relative;
+        z-index: 2;
     }
     
     .dung-than-active {
-        border: 2px solid #f59e0b !important;
-        box-shadow: 0 0 25px rgba(245, 158, 11, 0.4) !important;
+        border-width: 4px !important;
+        box-shadow: 0 0 30px rgba(245, 158, 11, 0.3) !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -818,13 +837,12 @@ if st.session_state.current_view == "ky_mon":
                         p_full_name = f"{palace_num} {QUAI_TUONG.get(palace_num, '')}" if palace_num != 5 else "5 Trung Cung"
                         status_badge = f'<span class="status-badge" style="background: {strength_color}; color: white;">{strength}</span>'
 
-                        # --- RENDER PALACE CARD (PREMIUM AESTHETICS) ---
+                        # --- RENDER PALACE CARD (4D & CLARITY ENHANCED) ---
                         palace_html = f"""<div class="palace-3d animated-panel">
-<div class="palace-inner {'dung-than-active' if has_dung_than else ''}" style="{bg_style} border: {border_width} solid {element_configs['border']}; min-height: 250px; position: relative; overflow: hidden; border-radius: 12px;">
-<div style="position: absolute; inset: 0; background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(2px); z-index: 0;"></div>
-<div style="position: relative; z-index: 1; padding: 10px;">
-<div class="palace-header-row"><span class="palace-title" style="color: #475569;">{p_full_name}</span>{status_badge}</div>
-<div class="palace-grid-container" style="height: 160px;">
+<div class="palace-inner {'dung-than-active' if has_dung_than else ''}" style="{bg_style} border: {border_width} solid {element_configs['border']}; min-height: 250px;">
+<div class="glass-overlay"></div>
+<div class="palace-header-row"><span class="palace-title">{p_full_name}</span>{status_badge}</div>
+<div class="palace-grid-container">
 <div class="grid-cell top-right" style="color: {c_thien};">{can_thien}</div>
 <div class="grid-cell mid-left" style="color: {c_sao};">{sao.replace('Thiên ', '')}</div>
 <div class="grid-cell center-deity" style="color: {c_than};">{than}</div>
@@ -834,7 +852,7 @@ if st.session_state.current_view == "ky_mon":
 <div class="palace-footer-markers">
 {f'<span style="color:#64748b; font-size:0.75rem;">⚪ {palace_num} KV</span>' if palace_num in chart['khong_vong'] else ''}
 {f'<span style="color:#f59e0b; font-size:0.75rem;">🐎 Mã</span>' if palace_num == chart['dich_ma'] else ''}
-</div></div></div></div>"""
+</div></div></div>"""
                         st.markdown(palace_html, unsafe_allow_html=True)
 
                         
