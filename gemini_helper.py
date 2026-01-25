@@ -130,15 +130,15 @@ class GeminiQMDGHelper:
     def get_system_knowledge(self):
         """Returns string representation of key system rules for AI context"""
         knowledge = """
-**KIẾN THỨC HỆ THỐNG KỲ MÔN:**
-- Hệ thống sử dụng Ma trận Sinh Khắc: Mộc sinh Hỏa, Hỏa sinh Thổ, Thổ sinh Kim, Kim sinh Thủy, Thủy sinh Mộc.
-- Các cung: 1 (Khảm - Thủy), 2 (Khôn - Thổ), 3 (Chấn - Mộc), 4 (Tốn - Mộc), 6 (Càn - Kim), 7 (Đoài - Kim), 8 (Cấn - Thổ), 9 (Ly - Hỏa).
-- Trực Phù là yếu tố lãnh đạo, Trực Sử là việc thực thi.
-- Dụng Thần quan trọng: 
-  + Hôn nhân: Ất (Nữ), Canh (Nam), Lục Hợp (Hợp tác).
-  + Kinh doanh: Sinh Môn (Lợi nhuận), Mậu (Vốn).
-  + Bệnh tật: Thiên Nhuế (Bệnh), Thiên Tâm/Ất (Thầy thuốc/Thuốc).
-- Các thần: Trực Phù (Cát), Đằng Xà (Quái dị), Thái Âm (Mưu mẹo), Lục Hợp (Hòa hợp), Bạch Hổ (Sát phạt), Huyền Vũ (Tối tăm), Cửu Địa (Bền vững), Cửu Thiên (Phát triển).
+**QUY TẮC LUẬN GIẢI CHUYÊN SÂU:**
+1. **Nguyên lý Sinh Khắc Cung:** 
+   - Thủy (1) -> Mộc (3,4) -> Hỏa (9) -> Thổ (2,8,5) -> Kim (6,7) -> Thủy (1).
+   - Khắc: Thủy khắc Hỏa, Hỏa khắc Kim, Kim khắc Mộc, Mộc khắc Thổ, Thổ khắc Thủy.
+2. **Dụng Thần (Object):** Là yếu tố đại diện cho sự việc cần xem.
+3. **Bản Thân (Subject):** Đại diện bởi Can Ngày (Thiên bàn) hoặc cung của người hỏi.
+4. **Phân tích nội cung:** 
+   - Sao (Thiên thời), Môn (Địa lợi - Nhân hòa), Thần (Thần trợ), Không Vong (Trạng thái rỗng, chưa tới lúc hoặc thất bại).
+5. **KẾT LUẬN:** Dựa trên việc Cung Dụng Thần Sinh cho hay Khắc Cung Bản Thần (hoặc ngược lại).
 """
         return knowledge
 
@@ -223,63 +223,77 @@ Trả lời bằng tiếng Việt, ngắn gọn nhưng đầy đủ ý nghĩa.""
     
     def comprehensive_analysis(self, chart_data, topic, dung_than_info=None):
         """
-        Comprehensive analysis with FULL CONTEXT
+        Focused Relational Analysis: Self (Subject) vs Topic (Object)
         """
         # Update context
         self.update_context(
             topic=topic,
             chart_data=chart_data,
             dung_than=dung_than_info or [],
-            last_action="Phân tích tổng hợp toàn bàn"
+            last_action="Luận giải trọng tâm Dụng Thần"
         )
         
-        context = self.get_context_prompt()
+        # 1. SCAN FOR CORE ACTORS
+        can_ngay = chart_data.get('can_ngay', 'N/A')
+        can_gio = chart_data.get('can_gio', 'N/A')
+        truc_phu = chart_data.get('truc_phu_ten', 'N/A')
+        truc_su = chart_data.get('truc_su_ten', 'N/A')
         
-        # Build palace summary
-        palace_summary = []
+        self_palace = "?"
+        dung_than_details = []
+        process_palace = "?"
+        
         for i in range(1, 10):
-            palace_summary.append(f"""
-Cung {i}:
-- Tinh: {chart_data.get('thien_ban', {}).get(i, 'N/A')}
-- Môn: {chart_data.get('nhan_ban', {}).get(i, 'N/A')}
-- Thần: {chart_data.get('than_ban', {}).get(i, 'N/A')}
-- Can: {chart_data.get('can_thien_ban', {}).get(i, 'N/A')}/{chart_data.get('dia_can', {}).get(i, 'N/A')}
-""")
+            # Locate Self
+            if chart_data.get('can_thien_ban', {}).get(i) == can_ngay:
+                self_palace = str(i)
+            # Locate Process/Outcome
+            if chart_data.get('can_thien_ban', {}).get(i) == can_gio:
+                process_palace = str(i)
+            # Locate Dụng Thần
+            if dung_than_info:
+                for dt in dung_than_info:
+                    if (chart_data.get('thien_ban', {}).get(i) == dt or 
+                        chart_data.get('nhan_ban', {}).get(i) == dt or 
+                        chart_data.get('than_ban', {}).get(i) == dt or 
+                        chart_data.get('can_thien_ban', {}).get(i) == dt or
+                        (dt.endswith(" Môn") and chart_data.get('nhan_ban', {}).get(i) in dt)):
+                        # Get details of Dụng Thần Palace
+                        detail = {
+                            'dt': dt,
+                            'palace': i,
+                            'star': chart_data.get('thien_ban', {}).get(i),
+                            'door': chart_data.get('nhan_ban', {}).get(i),
+                            'deity': chart_data.get('than_ban', {}).get(i),
+                            'void': i in chart_data.get('khong_vong', [])
+                        }
+                        dung_than_details.append(detail)
         
-        palaces_text = "\n".join(palace_summary)
-        
-        dung_than_text = ""
-        if dung_than_info:
-            dung_than_text = f"\n**Dụng Thần cần chú ý:** {', '.join(dung_than_info)}"
-        
-        prompt = f"""{context}Bạn là chuyên gia Kỳ Môn Độn Giáp hàng đầu.
+        # 2. CONTEXTUAL PROMPT
+        prompt = f"""{self.get_context_prompt()}Bạn là bậc thầy Kỳ Môn Độn Giáp. Hãy thực hiện luận giải LUẬN GIẢI TRỌNG TÂM cho chủ đề: **{topic}**.
 
-Hãy phân tích TỔNG QUAN toàn bộ bàn Kỳ Môn sau cho chủ đề: **{topic}**
+**QUY TẮC CỐT LÕI:**
+- KHÔNG liệt kê tất cả 9 cung. 
+- CHỈ tập trung vào mối quan hệ giữa **Bản Thân ({can_ngay})** và **Dụng Thần ({topic})**.
+- KẾT LUẬN dứt khoát dựa trên Sinh/Khắc/Chế/Hóa.
 
-**Thông tin bàn:**
-{palaces_text}
-{dung_than_text}
+**THÔNG TIN KEY TRONG BÀN:**
+1. **Bản Thân (Người hỏi):** Cung {self_palace} (Sao {chart_data.get('thien_ban', {}).get(int(self_palace) if self_palace.isdigit() else 1)}, Môn {chart_data.get('nhan_ban', {}).get(int(self_palace) if self_palace.isdigit() else 1)}).
+2. **Dụng Thần ({topic}):** {', '.join([f"{d['dt']} tại Cung {d['palace']} (Sao {d['star']}, Môn {d['door']}, Thần {d['deity']}{', KHÔNG VONG' if d['void'] else ''})" for d in dung_than_details])}.
+3. **Diễn biến (Can Giờ):** Cung {process_palace}.
+4. **Cơ cấu lãnh đạo:** Trực Phù là {truc_phu}, Trực Sử là {truc_su}.
 
-Hãy phân tích theo cấu trúc:
+**YÊU CẦU NỘI DUNG:**
 
-1. **Tổng quan tình hình** (2-3 câu): Nhìn chung tình hình như thế nào?
+- **PHẦN 1: TƯƠNG TÁC CHỦ - KHÁCH (Quan trọng nhất):** Cung Dụng Thần đang Sinh hay Khắc Cung Bản Thân? Điều này có nghĩa là sự việc thuận lợi hay đang gây áp lực cho bạn? Dụng Thần bị Không Vong hay Dịch Mã ảnh hưởng thực tế thế nào?
+- **PHẦN 2: DIỄN BIẾN & THỰC THI:** Trực Phù (xu thế lớn) và Trực Sử (cách hành động) có ủng hộ mục tiêu "{topic}" không? 
+- **PHẦN 3: KẾT LUẬN & CHIẾN LƯỢC:** 
+    - Kết quả cuối cùng là gì? 
+    - Nếu XẤU (Khắc): Cần dùng yếu tố gì để hóa giải (Thông quan)? 
+    - Nếu TỐT (Sinh): Cần làm gì để thúc đẩy nhanh hơn?
+- **PHẦN 4: ỨNG KỲ:** Dự đoán thời điểm mấu chốt.
 
-2. **Các điểm mạnh**: Những cung/yếu tố nào thuận lợi? Tại sao?
-
-3. **Các điểm yếu**: Những cung/yếu tố nào bất lợi? Cần lưu ý gì?
-
-4. **Tương tác quan trọng**: Có tương tác đặc biệt nào giữa các cung không?
-
-5. **Thời điểm**: Khi nào là thời điểm tốt/xấu?
-
-6. **Lời khuyên tổng hợp**: 
-   - Nên làm gì?
-   - Không nên làm gì?
-   - Chiến lược tổng thể?
-
-7. **Dự đoán kết quả**: Khả năng thành công? Cần chuẩn bị gì?
-
-Trả lời bằng tiếng Việt, cụ thể và thực tế."""
+Hãy trả lời bằng tiếng Việt, súc tích, sắc sảo, tập trung 100% vào chủ đề {topic}."""
 
         try:
             return self._call_ai(prompt)
