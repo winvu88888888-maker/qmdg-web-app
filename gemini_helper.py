@@ -171,7 +171,7 @@ class GeminiQMDGHelper:
     
     def analyze_palace(self, palace_data, topic):
         """
-        Analyze a specific palace with AI - WITH CONTEXT
+        Analyze a specific palace with AI - FOCUS ON ESSENTIALS
         """
         # Update context
         self.update_context(
@@ -182,21 +182,16 @@ class GeminiQMDGHelper:
         
         context = self.get_context_prompt()
         
-        prompt = f"""{context}Bạn là chuyên gia Kỳ Môn Độn Giáp hàng đầu.
+        prompt = f"""{context}Bạn là chuyên gia Kỳ Môn Độn Giáp hàng đầu. Hãy phân tích Cung {palace_data.get('num', 'N/A')} cho chủ đề: **{topic}**.
 
-Hãy phân tích Cung {palace_data.get('num', 'N/A')} này một cách CHUYÊN SÂU theo đúng chủ đề: **{topic}**.
+**NGUYÊN TẮC: NGẮN GỌN - ĐỦ Ý - KHÔNG LAN MAN.**
 
-**Thông tin cung:**
-- Sao: {palace_data.get('star', 'N/A')}, Môn: {palace_data.get('door', 'N/A')}, Thần: {palace_data.get('deity', 'N/A')}
-- Can: {palace_data.get('can_thien', 'N/A')}/{palace_data.get('can_dia', 'N/A')}
+**Yêu cầu:**
+1. **Giá trị của cung**: Cung này là Thuận hay Nghịch cho việc "{topic}"?
+2. **Điểm nhấn chính**: Tổ hợp Sao/Môn/Thần/Can tại đây báo hiệu điều gì cốt lõi nhất?
+3. **Chiến thuật hành động**: Làm gì ngay tại cung này để đạt mục tiêu?
 
-**Yêu cầu phân tích:**
-1. **Mối liên hệ với chủ đề**: Cung này đóng vai trò gì trong câu chuyện "{topic}"? Nó là cung Dụng Thần, cung Bản Thân hay cung gây ảnh hưởng?
-2. **Luận giải tổ hợp**: Sự kết hợp giữa Sao {palace_data.get('star', 'N/A')} và Môn {palace_data.get('door', 'N/A')} tại đây có giúp ích hay cản trở cho mục tiêu của bạn?
-3. **Thế trận Thần & Can**: Thần {palace_data.get('deity', 'N/A')} và cặp Can {palace_data.get('can_thien', 'N/A')}/{palace_data.get('can_dia', 'N/A')} đang tạo ra cơ hội hay cạm bẫy nào?
-4. **Lời khuyên hành động**: Nếu bạn quan tâm đến "{topic}", bạn cần lưu ý điều gì đặc biệt tại cung này?
-
-Trả lời bằng tiếng Việt, ngắn gọn, súc sắc và mang tính chất tư vấn chuyên môn."""
+Trả lời súc tích, đi thẳng vào vấn đề, không chào hỏi, không dẫn nhập."""
 
         try:
             return self._call_ai(prompt)
@@ -266,17 +261,14 @@ Trả lời bằng tiếng Việt, ngắn gọn, súc sắc và mang tính chấ
 3. **Diễn biến (Can Giờ):** Cung {process_palace}.
 4. **Cơ cấu lãnh đạo:** Trực Phù là {truc_phu}, Trực Sử là {truc_su}.
 
-**YÊU CẦU NỘI DUNG:**
+**YÊU CẦU: TRẢ LỜI SẮC LẠNH, SÚC TÍCH, KHÔNG CHỦ GIẢI LÝ THUYẾT.**
 
-- **PHẦN 1: TƯƠNG TÁC CHỦ - KHÁCH (Quan trọng nhất):** Cung Dụng Thần đang Sinh hay Khắc Cung Bản Thân? Điều này có nghĩa là sự việc thuận lợi hay đang gây áp lực cho bạn? Dụng Thần bị Không Vong hay Dịch Mã ảnh hưởng thực tế thế nào?
-- **PHẦN 2: DIỄN BIẾN & THỰC THI:** Trực Phù (xu thế lớn) và Trực Sử (cách hành động) có ủng hộ mục tiêu "{topic}" không? 
-- **PHẦN 3: KẾT LUẬN & CHIẾN LƯỢC:** 
-    - Kết quả cuối cùng là gì? 
-    - Nếu XẤU (Khắc): Cần dùng yếu tố gì để hóa giải (Thông quan)? 
-    - Nếu TỐT (Sinh): Cần làm gì để thúc đẩy nhanh hơn?
-- **PHẦN 4: ỨNG KỲ:** Dự đoán thời điểm mấu chốt.
+- **PHẦN 1: KẾT QUẢ (3-4 dòng):** Sinh hay Khắc? Cát hay Hung? Ngắn gọn nhất có thể.
+- **PHẦN 2: DIỄN BIẾN (Trực Phù/Trực Sử):** Xu thế và hành động cốt lõi.
+- **PHẦN 3: CHIẾN THUẬT (1 câu duy nhất):** Phải làm gì ngay bây giờ.
+- **PHẦN 4: THỜI ĐIỂM (1 cụm từ):** Khi nào.
 
-Hãy trả lời bằng tiếng Việt, súc tích, sắc sảo, tập trung 100% vào chủ đề {topic}."""
+Hãy trả lời bằng tiếng Việt, cực kỳ súc tích, tập trung 100% vào chủ đề {topic}."""
 
         try:
             return self._call_ai(prompt)
@@ -329,7 +321,7 @@ Hãy trả lời câu hỏi dựa trên:
 3. Kiến thức về dịch học
 4. Nguyên lý Ngũ hành, Bát quái
 
-Trả lời ngắn gọn, dễ hiểu, cụ thể và thực tế bằng tiếng Việt."""
+Trả lời CỰC KỲ NGẮN GỌN (tối đa 3-5 câu), tập trung vào thực tế, không lý thuyết suông."""
 
         try:
             return self._call_ai(prompt)
@@ -356,16 +348,14 @@ Trả lời ngắn gọn, dễ hiểu, cụ thể và thực tế bằng tiếng
         
         prompt = f"""{context}Bạn là chuyên gia Kỳ Môn Độn Giáp.
 
-Hãy giải thích chi tiết về {type_map.get(element_type, element_type)}: **{element_name}**
+Hãy giải thích CỐT LÕI về {type_map.get(element_type, element_type)}: **{element_name}**
 
-Bao gồm:
-1. Nguồn gốc và ý nghĩa
-2. Thuộc tính (Ngũ hành, âm dương, v.v.)
-3. Tính chất (cát/hung, đặc điểm)
-4. Ứng dụng trong luận đoán
-5. Ví dụ cụ thể
+**Yêu cầu (Tối đa 3-4 dòng):**
+1. Bản chất cốt lõi (Cát/Hung/Ngũ hành).
+2. Tác động chính đến vận mệnh/công việc.
+3. Lời khuyên nhanh khi gặp yếu tố này.
 
-Giải thích dễ hiểu, bằng tiếng Việt."""
+Bỏ qua nguồn gốc, ví dụ hay dẫn giải dài dòng. Trả lời sắc bén, súc tích."""
 
         try:
             return self._call_ai(prompt)
