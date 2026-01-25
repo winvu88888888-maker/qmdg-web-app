@@ -837,7 +837,11 @@ def lap_ban_qmdg(cuc, truc_phu_star, truc_su_door, can_gio, chi_gio, is_duong_do
     
     than_ban = {}
     try:
-        start_idx_cung = QUEUE_CUNG.index(cung_dich_truc_phu)
+        # Nếu Trực Phù về cung 5, thần bàn coi như về cung 2 (Khôn)
+        lookup_cung = cung_dich_truc_phu
+        if lookup_cung == 5: lookup_cung = 2
+        
+        start_idx_cung = QUEUE_CUNG.index(lookup_cung)
         
         for i, than in enumerate(THAN_ORDER):
             if is_duong_don:
