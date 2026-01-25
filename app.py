@@ -704,60 +704,81 @@ if st.session_state.current_view == "ky_mon":
                             markers.append("🐎 Dịch Mã")
                         marker_text = " ".join(markers) if markers else ""
                         
-                        # Display palace card with enhanced design
+                        # Determine Strength based on month
+                        # Simple mapping for display
+                        month = selected_datetime.month
+                        season_map = {1:"Xuân", 2:"Xuân", 3:"Xuân", 4:"Hạ", 5:"Hạ", 6:"Hạ", 7:"Thu", 8:"Thu", 9:"Thu", 10:"Đông", 11:"Đông", 12:"Đông"}
+                        current_season = season_map.get(month, "Xuân")
+                        strength = phan_tich_yeu_to_thoi_gian(hanh, current_season) if USE_MULTI_LAYER_ANALYSIS else "Bình"
+                        
+                        strength_color = {
+                            "Vượng": "#ff4d4d", # Fire red
+                            "Tướng": "#ffa502", # Gold
+                            "Hưu": "#7beded", # Sky
+                            "Tù": "#70a1ff", # Blue
+                            "Tử": "#a4b0be" # Grey
+                        }.get(strength, "#555")
+
+                        # Display palace card with premium design
                         st.markdown(f"""
                         <div style="
                             background: linear-gradient(135deg, {bg_color} 0%, {bg_color}ee 100%);
                             border: {border_width} solid {border_color};
-                            border-radius: 15px;
-                            padding: 16px;
-                            margin: 8px;
-                            min-height: 240px;
-                            box-shadow: 0 4px 6px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08);
+                            border-radius: 12px;
+                            padding: 20px;
+                            margin-bottom: 20px;
+                            min-height: 280px;
+                            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
                             transition: all 0.3s ease;
                             position: relative;
-                            overflow: hidden;
+                            display: flex;
+                            flex-direction: column;
+                            font-family: 'Montserrat', sans-serif;
                         ">
-                            <div style="
-                                position: absolute;
-                                top: -50px;
-                                right: -50px;
-                                width: 100px;
-                                height: 100px;
-                                background: rgba(255,255,255,0.1);
-                                border-radius: 50%;
-                            "></div>
-                            <div style="text-align: center; font-weight: 700; font-size: 20px; color: #1a1a2e; margin-bottom: 4px; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">
-                                Cung {palace_num} - {QUAI_TUONG.get(palace_num, '')}
-                            </div>
-                            <div style="text-align: center; font-size: 13px; color: #555; margin-bottom: 12px; font-weight: 600;">
-                                {hanh} {marker_text}
-                            </div>
-                            <div style="height: 2px; background: linear-gradient(90deg, transparent, {border_color}, transparent); margin: 10px 0;"></div>
-                            <div style="font-size: 14px; line-height: 2; font-family: 'Segoe UI', Arial, sans-serif;">
-                                <div style="display: flex; align-items: center; margin: 4px 0;">
-                                    <span style="min-width: 110px; font-weight: 600; color: #444;">⭐ Tinh:</span>
-                                    <span style="color: #2c3e50; font-weight: 500;">{sao}</span>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                                <div style="font-weight: 800; font-size: 24px; color: #1e293b; line-height: 1;">
+                                    {palace_num}
+                                    <div style="font-size: 14px; font-weight: 600; color: #64748b; margin-top: 4px;">{QUAI_TUONG.get(palace_num, '')}</div>
                                 </div>
-                                <div style="display: flex; align-items: center; margin: 4px 0;">
-                                    <span style="min-width: 110px; font-weight: 600; color: #444;">🚪 Môn:</span>
-                                    <span style="color: #2c3e50; font-weight: 500;">{cua}</span>
-                                </div>
-                                <div style="display: flex; align-items: center; margin: 4px 0;">
-                                    <span style="min-width: 110px; font-weight: 600; color: #444;">👤 Thần:</span>
-                                    <span style="color: #2c3e50; font-weight: 500;">{than}</span>
-                                </div>
-                                <div style="display: flex; align-items: center; margin: 4px 0;">
-                                    <span style="min-width: 110px; font-weight: 600; color: #444;">☁️ Can Thiên:</span>
-                                    <span style="color: #2c3e50; font-weight: 500;">{can_thien}</span>
-                                </div>
-                                <div style="display: flex; align-items: center; margin: 4px 0;">
-                                    <span style="min-width: 110px; font-weight: 600; color: #444;">🌍 Can Địa:</span>
-                                    <span style="color: #2c3e50; font-weight: 500;">{can_dia}</span>
+                                <div style="background: {strength_color}; color: white; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
+                                    {strength}
                                 </div>
                             </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; flex-grow: 1;">
+                                <div style="background: rgba(255,255,255,0.4); padding: 8px; border-radius: 8px; text-align: center;">
+                                    <div style="font-size: 10px; color: #64748b; font-weight: 700;">SAO</div>
+                                    <div style="font-size: 15px; font-weight: 700; color: #0f172a;">{sao}</div>
+                                </div>
+                                <div style="background: rgba(255,255,255,0.4); padding: 8px; border-radius: 8px; text-align: center;">
+                                    <div style="font-size: 10px; color: #64748b; font-weight: 700;">MÔN</div>
+                                    <div style="font-size: 15px; font-weight: 700; color: #0f172a;">{cua}</div>
+                                </div>
+                                <div style="background: rgba(255,255,255,0.4); padding: 8px; border-radius: 8px; text-align: center;">
+                                    <div style="font-size: 10px; color: #64748b; font-weight: 700;">THẦN</div>
+                                    <div style="font-size: 15px; font-weight: 700; color: #0f172a;">{than}</div>
+                                </div>
+                                <div style="background: rgba(255,255,255,0.4); padding: 8px; border-radius: 8px; text-align: center;">
+                                    <div style="font-size: 10px; color: #64748b; font-weight: 700;">HÀNH</div>
+                                    <div style="font-size: 15px; font-weight: 700; color: #0f172a;">{hanh}</div>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 15px; padding-top: 10px; border-top: 1px dashed rgba(0,0,0,0.1); display: flex; justify-content: space-between;">
+                                <div style="text-align: left;">
+                                    <div style="font-size: 9px; color: #64748b; font-weight: 700;">THIÊN</div>
+                                    <div style="font-size: 14px; font-weight: 700; color: #d97706;">{can_thien}</div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 9px; color: #64748b; font-weight: 700;">ĐỊA</div>
+                                    <div style="font-size: 14px; font-weight: 700; color: #475569;">{can_dia}</div>
+                                </div>
+                            </div>
+                            
+                            {f'<div style="margin-top: 10px; font-size: 10px; color: #7c3aed; font-weight: 700; text-align: center;">✨ {marker_text}</div>' if marker_text else ''}
                         </div>
                         """, unsafe_allow_html=True)
+
                         
                         # Expander for detailed analysis
                         with st.expander(f"📖 Chi tiết Cung {palace_num}"):
@@ -1307,33 +1328,45 @@ elif st.session_state.current_view == "luc_hao":
         col_ban, col_bien = st.columns(2)
         
         with col_ban:
-            st.markdown("**🎯 Bản Quẻ**")
+            st.markdown("<div style='text-align: center; margin-bottom: 20px;'><strong>🎯 Bản Quẻ</strong></div>", unsafe_allow_html=True)
             if 'ban_qua_ten' in luc_hao_result:
-                st.markdown(f"<div style='text-align: center; font-size: 24px; font-weight: bold; color: #2c3e50;'>{luc_hao_result['ban_qua_ten']}</div>", unsafe_allow_html=True)
+                st.markdown(f"<div style='text-align: center; font-size: 20px; font-weight: 800; color: #1e293b; margin-bottom: 15px;'>{luc_hao_result['ban_qua_ten']}</div>", unsafe_allow_html=True)
             
-            # Display hexagram lines (visual representation)
+            # Premium 6-line display
             if 'ban_qua_lines' in luc_hao_result:
-                st.markdown("<div style='text-align: center; font-family: monospace; font-size: 16px;'>", unsafe_allow_html=True)
-                for line in luc_hao_result['ban_qua_lines']:
-                    if line == 1:  # Yang line
-                        st.markdown("━━━━━━", unsafe_allow_html=True)
-                    else:  # Yin line
-                        st.markdown("━━  ━━", unsafe_allow_html=True)
-                st.markdown("</div>", unsafe_allow_html=True)
-        
+                lines = luc_hao_result['ban_qua_lines']
+                details = luc_hao_result.get('phan_tich_tung_hao', [])
+                
+                for i in range(6):
+                    line = lines[i]
+                    detail = details[i] if i < len(details) else {}
+                    
+                    line_html = "━━━━━━" if line == 1 else "━━  ━━"
+                    line_color = "#ef4444" if line == 1 else "#3b82f6" # Red for Yang, Blue for Yin
+                    
+                    st.markdown(f"""
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 8px;">
+                        <div style="font-size: 11px; font-weight: 700; color: #64748b; width: 60px; text-align: right;">{detail.get('luc_thu', '')}</div>
+                        <div style="font-size: 18px; font-weight: 900; color: {line_color}; letter-spacing: -2px;">{line_html}</div>
+                        <div style="font-size: 11px; font-weight: 700; color: #1e293b; width: 60px; text-align: left;">{detail.get('luc_than', '')}</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+
         with col_bien:
-            st.markdown("**🔄 Biến Quẻ**")
+            st.markdown("<div style='text-align: center; margin-bottom: 20px;'><strong>🔄 Biến Quẻ</strong></div>", unsafe_allow_html=True)
             if 'bien_qua_ten' in luc_hao_result:
-                st.markdown(f"<div style='text-align: center; font-size: 24px; font-weight: bold; color: #2c3e50;'>{luc_hao_result['bien_qua_ten']}</div>", unsafe_allow_html=True)
+                st.markdown(f"<div style='text-align: center; font-size: 20px; font-weight: 800; color: #1e293b; margin-bottom: 15px;'>{luc_hao_result['bien_qua_ten']}</div>", unsafe_allow_html=True)
             
             if 'bien_qua_lines' in luc_hao_result:
-                st.markdown("<div style='text-align: center; font-family: monospace; font-size: 16px;'>", unsafe_allow_html=True)
-                for line in luc_hao_result['bien_qua_lines']:
-                    if line == 1:
-                        st.markdown("━━━━━━", unsafe_allow_html=True)
-                    else:
-                        st.markdown("━━  ━━", unsafe_allow_html=True)
-                st.markdown("</div>", unsafe_allow_html=True)
+                lines_bien = luc_hao_result['bien_qua_lines']
+                for i, line in enumerate(lines_bien):
+                    line_html = "━━━━━━" if line == 1 else "━━  ━━"
+                    line_color = "#ef4444" if line == 1 else "#3b82f6"
+                    st.markdown(f"""
+                    <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+                        <div style="font-size: 18px; font-weight: 900; color: {line_color}; letter-spacing: -2px;">{line_html}</div>
+                    </div>
+                    """, unsafe_allow_html=True)
         
         # Display detailed information
         st.markdown("---")

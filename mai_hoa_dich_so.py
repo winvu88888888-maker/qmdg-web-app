@@ -25,8 +25,11 @@ def get_qua_name(upper, lower):
     }
     return mapping.get((upper, lower), f"{QUAI_NAMES.get(upper)} {QUAI_NAMES.get(lower)}")
 
-def tinh_qua_theo_thoi_gian(dt):
-    """Tính quẻ theo Giờ, Ngày, Tháng, Năm"""
+from datetime import datetime
+
+def tinh_qua_theo_thoi_gian(year, month, day, hour):
+    """Tính quẻ theo Giờ, Ngày, Tháng, Năm (với đối số rời)"""
+    dt = datetime(year, month, day, hour)
     # Simplified calculation
     year_idx = (dt.year - 4) % 12 + 1
     total_upper = year_idx + dt.month + dt.day
@@ -63,14 +66,17 @@ def tinh_qua_ngau_nhien():
         'dong_hao': dong_hao
     }
 
-def giai_qua(ten_qua):
-    """Trả về lời giải chi tiết cho quẻ"""
+def giai_qua(qua_result, topic="Chung"):
+    """Trả về lời giải chi tiết cho quẻ dựa trên chủ đề"""
+    ten_qua = qua_result.get('ten_qua', "")
     interpretations = {
-        "Càn Vi Thiên": "Vạn vật khởi đầu, hanh thông, cương kiện.",
-        "Khôn Vi Địa": "Nhu thuận, bao dung, hậu đức tải vật.",
-        "Địa Thiên Thái": "Thời kỳ hưng thịnh, thái bình, giao hòa.",
-        "Thiên Địa Bĩ": "Bế tắc, không thông, nên thu mình.",
-        "Thủy Hỏa Ký Tế": "Đã thành công, cần giữ gìn.",
-        "Hỏa Thủy Vị Tế": "Chưa xong, còn hy vọng, cần nỗ lực."
+        "Càn Vi Thiên": "Vạn vật khởi đầu, hanh thông, cương kiện. Phù hợp cho sự nghiệp đỉnh cao.",
+        "Khôn Vi Địa": "Nhu thuận, bao dung, hậu đức tải vật. Tốt cho đất đai, bất động sản.",
+        "Địa Thiên Thái": "Thời kỳ hưng thịnh, thái bình, giao hòa. Mọi sự như ý.",
+        "Thiên Địa Bĩ": "Bế tắc, không thông, nên thu mình chờ thời.",
+        "Thủy Hỏa Ký Tế": "Đã thành công, cần giữ gìn cẩn thận tránh suy tàn.",
+        "Hỏa Thủy Vị Tế": "Chưa xong, còn nhiều hy vọng, cần nỗ lực bền bỉ."
     }
-    return interpretations.get(ten_qua, "Lời giải đang được cập nhật từ hệ thống dữ liệu...")
+    
+    base_interpretation = interpretations.get(ten_qua, "Lời giải đang được cập nhật từ hệ thống dữ liệu...")
+    return f"**[Phân tích cho chủ đề {topic}]:**\n\n{base_interpretation}"
