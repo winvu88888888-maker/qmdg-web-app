@@ -1960,7 +1960,7 @@ elif st.session_state.current_view == "luc_hao":
         
         if st.button("🤖 AI Luận Quẻ", key="ai_iching_btn"):
             with st.spinner("AI đang giải mã..."):
-                ans = st.session_state.gemini_helper.answer_question(f"Luận quẻ {res['ban']['name']} biến {res['bien']['name']} cho việc {selected_topic}")
+                ans = st.session_state.gemini_helper.analyze_luc_hao(res, selected_topic)
                 st.info(ans)
 
 

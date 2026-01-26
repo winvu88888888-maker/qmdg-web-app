@@ -396,6 +396,50 @@ Trả lời bằng phong thái chuyên gia tư vấn tận tâm, ngôn ngữ gi�
         except Exception as e:
             return f"❌ Lỗi khi gọi AI: {str(e)}"
     
+    def analyze_luc_hao(self, luc_hao_res, topic="Chung"):
+        """
+        Analyze Luc Hao (I Ching) data with AI. 
+        Takes the result dictionary from luc_hao_kinh_dich.py
+        """
+        ban = luc_hao_res.get('ban', {})
+        bien = luc_hao_res.get('bien', {})
+        dong_hao = luc_hao_res.get('dong_hao', [])
+        
+        # Format details for Original Hexagram
+        hào_details_ban = []
+        for d in reversed(ban.get('details', [])):
+            hào_details_ban.append(
+                f"Hào {d['hao']}{d.get('marker', '')}: {d['luc_than']} - {d['can_chi']} - {d['luc_thu']} "
+                f"({'ĐỘNG' if d['is_moving'] else 'tĩnh'})"
+            )
+        
+        # Format details for Transformed Hexagram (if details differ, but here they are shared mostly)
+        # We focus on the fact that lines changed.
+        
+        prompt = f"""Bạn là bậc thầy Lục Hào Kinh Dịch. Hãy luận giải quẻ này cho việc: **{topic}**.
+
+**DỮ LIỆU QUẺ:**
+- **Quẻ Chủ**: {ban.get('name')} (Họ {ban.get('palace')})
+- **Quẻ Biến**: {bien.get('name')}
+- **Hào Động**: {', '.join(map(str, dong_hao)) if dong_hao else 'Không có'}
+- **Thế/Ứng**: {luc_hao_res.get('the_ung')}
+
+**CHI TIẾT CÁC HÀO (Quẻ Chủ):**
+{chr(10).join(hào_details_ban)}
+
+**YÊU CẦU LUẬN GIẢI:**
+1. **Dụng Thần**: Xác định Hào nào là Dụng Thần cho việc {topic}? Trạng thái của Dụng Thần (Vượng/Tướng/Hưu/Tù/Tử)?
+2. **Sự Biến Hóa**: Hào động biến thành gì ở Quẻ Biến? Sự biến hóa này là "Hồi đầu sinh", "Hồi đầu khắc", hay "Hóa tiến", "Hóa thoái"?
+3. **Kết luận**: Việc {topic} sẽ có diễn biến thế nào? Kết quả cuối cùng là Cát hay Hung?
+4. **Lời khuyên**: Cần làm gì hoặc lưu ý điều gì?
+
+**PHONG CÁCH**: Chuyên nghiệp, sắc bén, đi sâu vào mối quan hệ Sinh - Khắc giữa các hào và quẻ biến. Hãy luận giải CHI TIẾT quẻ biến."""
+
+        try:
+            return self._call_ai(prompt)
+        except Exception as e:
+            return f"❌ Lỗi khi gọi AI: {str(e)}"
+    
     def answer_question(self, question, chart_data=None, topic=None):
         """
         Answer with FULL CONTEXT AWARENESS

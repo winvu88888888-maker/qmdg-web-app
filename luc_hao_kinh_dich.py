@@ -1,19 +1,63 @@
-# luc_hao_kinh_dich.py - Module Lục Hào Kinh Dịch FULL
 import random
 from datetime import datetime
 
 LUC_THAN = ["Huynh Đệ", "Phụ Mẫu", "Quan Quỷ", "Thê Tài", "Tử Tôn"]
 LUC_THU = ["Thanh Long", "Chu Tước", "Câu Trần", "Đằng Xà", "Bạch Hổ", "Huyền Vũ"]
 PALACE_ELEMENTS = {"Càn":"Kim", "Đoài":"Kim", "Ly":"Hỏa", "Chấn":"Mộc", "Tốn":"Mộc", "Khảm":"Thủy", "Cấn":"Thổ", "Khôn":"Thổ"}
-HEXAGRAM_PALACES = {"Càn Vi Thiên":"Càn", "Thiên Địa Bĩ":"Càn", "Khôn Vi Địa":"Khôn", "Địa Thiên Thái":"Khôn"}
-NAP_GIAP_MAP = {"Càn":["Tý-Thủy", "Dần-Mộc", "Thìn-Thổ", "Ngọ-Hỏa", "Thân-Kim", "Tuất-Thổ"], "Khôn":["Mùi-Thổ", "Tị-Hỏa", "Mão-Mộc", "Sửu-Thổ", "Hợi-Thủy", "Dậu-Kim"]}
+HEXAGRAM_PALACES = {
+    "Càn Vi Thiên":"Càn", "Thiên Địa Bĩ":"Càn", "Thiên Sơn Độn":"Càn", "Thiên Hỏa Đồng Nhân":"Càn",
+    "Khôn Vi Địa":"Khôn", "Địa Thiên Thái":"Khôn", "Địa Trạch Lâm":"Khôn", "Địa Lôi Phục":"Khôn",
+    "Khảm Vi Thủy":"Khảm", "Thủy Lôi Truân":"Khảm", "Thủy Trạch Tiết":"Khảm", "Thủy Sơn Kiển":"Khảm",
+    "Ly Vi Hỏa":"Ly", "Hỏa Thiên Đại Hữu":"Ly", "Hỏa Phong Đỉnh":"Ly", "Hỏa Thủy Vị Tế":"Ly",
+    "Chấn Vi Lôi":"Chấn", "Lôi Địa Dự":"Chấn", "Lôi Thủy Giải":"Chấn", "Lôi Phong Hằng":"Chấn",
+    "Tốn Vi Phong":"Tốn", "Phong Thiên Tiểu Súc":"Tốn", "Phong Hỏa Gia Nhân":"Tốn", "Phong Lôi Ích":"Tốn",
+    "Cấn Vi Sơn":"Cấn", "Sơn Hỏa Bí":"Cấn", "Sơn Thiên Đại Súc":"Cấn", "Sơn Trạch Tổn":"Cấn",
+    "Đoài Vi Trạch":"Đoài", "Trạch Thủy Khốn":"Đoài", "Trạch Địa Tụy":"Đoài", "Trạch Sơn Hàm":"Đoài"
+}
+NAP_GIAP_MAP = {
+    "Càn":["Tý-Thủy", "Dần-Mộc", "Thìn-Thổ", "Ngọ-Hỏa", "Thân-Kim", "Tuất-Thổ"], 
+    "Khôn":["Mùi-Thổ", "Tị-Hỏa", "Mão-Mộc", "Sửu-Thổ", "Hợi-Thủy", "Dậu-Kim"],
+    "Cấn":["Thìn-Thổ", "Ngọ-Hỏa", "Thân-Kim", "Tuất-Thổ", "Tý-Thủy", "Dần-Mộc"],
+    "Đoài":["Tị-Hỏa", "Mão-Mộc", "Sửu-Thổ", "Hợi-Thủy", "Dậu-Kim", "Mùi-Thổ"],
+    "Khảm":["Dần-Mộc", "Thìn-Thổ", "Ngọ-Hỏa", "Thân-Kim", "Tuất-Thổ", "Tý-Thủy"],
+    "Ly":["Mão-Mộc", "Sửu-Thổ", "Hợi-Thủy", "Dậu-Kim", "Mùi-Thổ", "Tị-Hỏa"],
+    "Chấn":["Tý-Thủy", "Dần-Mộc", "Thìn-Thổ", "Ngọ-Hỏa", "Thân-Kim", "Tuất-Thổ"],
+    "Tốn":["Sửu-Thổ", "Hợi-Thủy", "Dậu-Kim", "Mùi-Thổ", "Tị-Hỏa", "Mão-Mộc"]
+}
+
+# 64 Hexagrams Database for Naming
+HEXAGRAM_NAMES = {
+    (1, 1): "Càn Vi Thiên", (8, 8): "Khôn Vi Địa", (6, 6): "Khảm Vi Thủy", (3, 3): "Ly Vi Hỏa",
+    (4, 4): "Chấn Vi Lôi", (5, 5): "Tốn Vi Phong", (7, 7): "Cấn Vi Sơn", (2, 2): "Đoài Vi Trạch",
+    (1, 8): "Thiên Địa Bĩ", (8, 1): "Địa Thiên Thái", (6, 3): "Thủy Hỏa Ký Tế", (3, 6): "Hỏa Thủy Vị Tế",
+    (2, 1): "Trạch Thiên Quải", (1, 2): "Thiên Trạch Lý", (3, 1): "Hỏa Thiên Đại Hữu", (1, 3): "Thiên Hỏa Đồng Nhân",
+    (4, 1): "Lôi Thiên Đại Tráng", (1, 4): "Thiên Lôi Vô Vọng", (5, 1): "Phong Thiên Tiểu Súc", (1, 5): "Thiên Phong Cấu",
+    (7, 1): "Sơn Thiên Đại Súc", (1, 7): "Thiên Sơn Độn", (8, 2): "Địa Trạch Lâm", (2, 8): "Trạch Địa Tụy",
+    (3, 2): "Hỏa Trạch Khuê", (2, 3): "Trạch Hỏa Cách", (4, 2): "Lôi Trạch Quy Muội", (2, 4): "Trạch Lôi Tùy",
+    (5, 2): "Phong Trạch Trung Phu", (2, 5): "Trạch Phong Đại Quá", (6, 2): "Thủy Trạch Tiết", (2, 6): "Trạch Thủy Khốn",
+    (7, 2): "Sơn Trạch Tổn", (2, 7): "Trạch Sơn Hàm", (4, 3): "Lôi Hỏa Phong", (3, 4): "Hỏa Lôi Phệ Hạp",
+    (5, 3): "Phong Hỏa Gia Nhân", (3, 5): "Hỏa Phong Đỉnh", (6, 4): "Thủy Lôi Truân", (4, 6): "Lôi Thủy Giải",
+    # ... can add more as needed, or use a helper to derive from lines
+}
+
+def lines_to_quai_num(lines):
+    m = {(1,1,1):1, (1,1,0):2, (1,0,1):3, (1,0,0):4, (0,1,1):5, (0,1,0):6, (0,0,1):7, (0,0,0):8}
+    return m.get(tuple(lines), 1)
+
+def get_hex_name(lines):
+    # lines: 0,1,2 (lower), 3,4,5 (upper)
+    lower = lines_to_quai_num(lines[:3])
+    upper = lines_to_quai_num(lines[3:])
+    return HEXAGRAM_NAMES.get((upper, lower), f"Quẻ {upper}-{lower}")
 
 def lap_qua_luc_hao(year, month, day, hour, topic="Chung", can_ngay="Giáp", **kwargs):
     hao_results = [random.randint(6, 9) for _ in range(6)]
     ban_lines = [1 if h in [7, 9] else 0 for h in hao_results]
     bien_lines = [ (0 if h==9 else 1 if h==6 else (1 if h==7 else 0)) for h in hao_results ]
     
-    ban_name = random.choice(list(HEXAGRAM_PALACES.keys()))
+    ban_name = get_hex_name(ban_lines)
+    bien_name = get_hex_name(bien_lines)
+    
     palace = HEXAGRAM_PALACES.get(ban_name, "Càn")
     p_element = PALACE_ELEMENTS.get(palace, "Kim")
     
@@ -31,8 +75,8 @@ def lap_qua_luc_hao(year, month, day, hour, topic="Chung", can_ngay="Giáp", **k
         
     return {
         'ban': {'name': ban_name, 'lines': ban_lines, 'details': details_ban, 'palace': palace},
-        'bien': {'name': "Quẻ Biến", 'lines': bien_lines, 'details': details_ban},
+        'bien': {'name': bien_name, 'lines': bien_lines},
         'dong_hao': [i+1 for i, h in enumerate(hao_results) if h in [6, 9]],
-        'conclusion': f"Quẻ {ban_name}. {topic} tốt lành.",
+        'conclusion': f"Quẻ {ban_name} biến {bien_name}. {topic} tốt lành.",
         'the_ung': "Thế hào 3, Ứng hào 6"
     }
