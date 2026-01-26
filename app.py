@@ -296,106 +296,149 @@ st.markdown("""
     }
 
     /* --- I-CHING & MAI HOA PROFESSIONAL UI --- */
+    /* --- I-CHING & MAI HOA PROFESSIONAL UI (EMPEROR THEME) --- */
     .iching-container {
-        background: white;
-        border: 2px solid #22c55e;
-        border-radius: 12px;
-        padding: 2.5rem;
-        margin-top: 1.5rem;
-        box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+        background: linear-gradient(to bottom, #ffffff, #fff9e6);
+        border: 3px solid #b91c1c;
+        border-radius: 20px;
+        padding: 3rem;
+        margin-top: 2rem;
+        box-shadow: 0 20px 50px rgba(185, 28, 28, 0.15);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .iching-container::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0; height: 10px;
+        background: linear-gradient(90deg, #b91c1c, #f59e0b, #b91c1c);
     }
 
     .hex-header-row {
         display: flex;
         justify-content: space-around;
         text-align: center;
-        margin-bottom: 2rem;
+        margin-bottom: 3rem;
     }
 
     .hex-title-pro {
-        font-size: 2rem;
+        font-size: 2.2rem;
         font-weight: 900;
         color: #b91c1c;
         text-transform: uppercase;
-        letter-spacing: 3px;
+        letter-spacing: 4px;
         margin-bottom: 0.5rem;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
     }
 
     .hex-subtitle {
-        font-size: 1.1rem;
-        color: #64748b;
-        font-weight: 600;
+        font-size: 1.2rem;
+        color: #92400e;
+        font-weight: 700;
+        letter-spacing: 1px;
     }
 
     .hex-visual-stack {
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 10px;
         align-items: center;
-        margin: 20px 0;
+        margin: 30px 0;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 15px;
+        border: 1px solid #fef3c7;
     }
 
     .hao-line-pro {
-        height: 14px;
-        width: 140px;
-        border-radius: 3px;
+        height: 18px;
+        width: 180px;
+        border-radius: 4px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 
     .yang-line-pro {
-        background: linear-gradient(90deg, #1e3a8a, #3b82f6);
+        background: linear-gradient(90deg, #1e293b, #b91c1c);
     }
 
     .yin-line-pro {
         display: flex;
-        gap: 20px;
-        width: 140px;
+        gap: 30px;
+        width: 180px;
     }
 
     .yin-half-pro {
         flex: 1;
-        height: 14px;
-        background: linear-gradient(90deg, #1e3a8a, #3b82f6);
-        border-radius: 3px;
+        height: 18px;
+        background: linear-gradient(90deg, #1e293b, #b91c1c);
+        border-radius: 4px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .hao-moving-glow {
+        box-shadow: 0 0 15px #f59e0b, 0 0 5px #f59e0b !important;
+        border: 2px solid #fde68a;
     }
 
     .hao-table-pro {
         width: 100%;
-        border-collapse: collapse;
-        font-size: 0.95rem;
+        border-collapse: separate;
+        border-spacing: 0 8px;
         margin-top: 1.5rem;
     }
 
     .hao-table-pro th {
-        background: #f8fafc;
-        color: #1e293b;
+        background: #b91c1c;
+        color: #ffffff;
         font-weight: 800;
-        padding: 12px;
-        border: 1px solid #e2e8f0;
+        padding: 15px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border: none;
         text-align: center;
     }
 
     .hao-table-pro td {
-        padding: 10px;
-        border: 1px solid #e2e8f0;
+        background: #ffffff;
+        padding: 12px;
+        border-top: 1px solid #fee2e2;
+        border-bottom: 1px solid #fee2e2;
         text-align: center;
-        font-weight: 500;
+        font-weight: 700;
+        color: #1e293b;
     }
 
+    .hao-table-pro tr td:first-child { border-left: 1px solid #fee2e2; border-radius: 8px 0 0 8px; }
+    .hao-table-pro tr td:last-child { border-right: 1px solid #fee2e2; border-radius: 0 8px 8px 0; }
+
     .highlight-red {
-        color: #ef4444;
-        font-weight: 800 !important;
+        background: #fff1f2 !important;
+        color: #b91c1c !important;
     }
 
     .status-footer-pro {
-        background: #f1f5f9;
-        padding: 15px;
-        border-radius: 8px;
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        color: #fcd34d;
+        padding: 20px;
+        border-radius: 12px;
         margin-top: 2rem;
-        font-weight: 700;
+        font-weight: 800;
         display: flex;
         justify-content: space-around;
-        border-left: 5px solid #b91c1c;
+        border-bottom: 5px solid #f59e0b;
+        font-size: 1.1rem;
     }
+
+    .tuong-que-box {
+        background: #fefce8;
+        border-left: 6px solid #f59e0b;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+        font-style: italic;
+    }
+
 </style>
 """, unsafe_allow_html=True)
 # Initialize zoom level in session state
@@ -1684,31 +1727,45 @@ elif st.session_state.current_view == "mai_hoa":
         st.markdown(f"""
         <div class="hex-header-row">
             <div>
-                <div class="hex-title-pro">{res.get('ten_qua', 'Quẻ Chính')}</div>
-                <div class="hex-subtitle">Quẻ Chủ / Hỗ</div>
+                <div class="hex-title-pro">{res.get('ten', 'Quẻ Chính')}</div>
+                <div class="hex-subtitle">{res.get('upper_symbol')} / {res.get('lower_symbol')}</div>
             </div>
             <div>
-                <div class="hex-title-pro">BIẾN CÁT TƯỜNG</div>
+                <div class="hex-title-pro">{res.get('ten_qua_bien', 'BIẾN CÁT TƯỜNG')}</div>
                 <div class="hex-subtitle">Động hào {res.get('dong_hao', '?')}</div>
             </div>
         </div>
         """, unsafe_allow_html=True)
         
+        # Display Imagery (Tượng Quẻ)
+        st.markdown(f"""
+        <div class="tuong-que-box">
+            <strong>🖼️ Tượng Quẻ:</strong> {res.get('tuong', 'Đang cập nhật...')} <br>
+            <strong>📖 Ý nghĩa:</strong> {res.get('nghĩa', 'Đang phân tích...')}
+        </div>
+        """, unsafe_allow_html=True)
+
         # Add visual lines for Mai Hoa
         col_mh_v1, col_mh_v2 = st.columns(2)
         with col_mh_v1:
             if 'lines' in res:
+                st.markdown(f'<div style="text-align:center; font-weight:800; color:#b91c1c;">QUẺ CHỦ ({res["upper_element"]}/{res["lower_element"]})</div>', unsafe_allow_html=True)
                 st.markdown('<div class="hex-visual-stack">', unsafe_allow_html=True)
-                for line in reversed(res['lines']):
+                for i, line in enumerate(reversed(res['lines'])):
+                    h_idx = 6 - i
+                    is_dong = (h_idx == res['dong_hao'])
                     cls = "yang-line-pro" if line == 1 else "yin-line-pro"
+                    glow = "hao-moving-glow" if is_dong else ""
+                    
                     if line == 1:
-                        st.markdown(f'<div class="hao-line-pro {cls}"></div>', unsafe_allow_html=True)
+                        st.markdown(f'<div class="hao-line-pro {cls} {glow}"></div>', unsafe_allow_html=True)
                     else:
-                        st.markdown(f'<div class="{cls}"><div class="yin-half-pro"></div><div class="yin-half-pro"></div></div>', unsafe_allow_html=True)
+                        st.markdown(f'<div class="{cls}"><div class="yin-half-pro {glow}"></div><div class="yin-half-pro {glow}"></div></div>', unsafe_allow_html=True)
                 st.markdown('</div>', unsafe_allow_html=True)
         
         with col_mh_v2:
             if 'lines_bien' in res:
+                st.markdown(f'<div style="text-align:center; font-weight:800; color:#b91c1c;">QUẺ BIẾN</div>', unsafe_allow_html=True)
                 st.markdown('<div class="hex-visual-stack">', unsafe_allow_html=True)
                 for line in reversed(res['lines_bien']):
                     cls = "yang-line-pro" if line == 1 else "yin-line-pro"
@@ -1718,7 +1775,8 @@ elif st.session_state.current_view == "mai_hoa":
                         st.markdown(f'<div class="{cls}"><div class="yin-half-pro"></div><div class="yin-half-pro"></div></div>', unsafe_allow_html=True)
                 st.markdown('</div>', unsafe_allow_html=True)
         
-        st.success(f"💡 **Luận giải:** {res.get('interpretation', 'Đang phân tích...')}")
+        st.info(f"💡 **Luận giải chi tiết:** {res.get('interpretation', 'Đang phân tích...')}")
+
         st.markdown('<div class="footer-stamp">Copyright © 2026 MAI HOA DICH SO PRO</div>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
@@ -1769,18 +1827,16 @@ elif st.session_state.current_view == "luc_hao":
                     st.markdown(f'<div class="{cls}"><div class="yin-half-pro"></div><div class="yin-half-pro"></div></div>', unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
 
-            st.markdown('<table class="hao-table-pro"><tr><th>Hào</th><th>Lục Thân</th><th>Can Chi</th><th>TK</th></tr>', unsafe_allow_html=True)
+            st.markdown('<table class="hao-table-pro"><tr><th>HÀO</th><th>LỤC THÂN</th><th>CAN CHI</th><th>ĐỊNH VỊ</th></tr>', unsafe_allow_html=True)
             for d in reversed(res['ban']['details']):
                 h_cls = "highlight-red" if d['is_moving'] else ""
-                # Simple logic for markers
-                marker = ""
-                if f"Hào {d['hao']}" in res['the_ung']:
-                    marker = " (T)" if "Thế" in res['the_ung'].split(',')[0] and f"{d['hao']}" in res['the_ung'].split(',')[0] else " (Ứ)"
+                marker = d.get('marker', '')
                 
-                st.markdown(f'<tr class="{h_cls}"><td>{d["hao"]}{marker}</td><td>{d["luc_than"]}</td><td>{d["can_chi"]}</td><td>{d["loc_ma"]}</td></tr>', unsafe_allow_html=True)
+                st.markdown(f'<tr class="{h_cls}"><td>Hào {d["hao"]} {marker}</td><td>{d["luc_than"]}</td><td>{d["can_chi"]}</td><td>{d.get("loc_ma", "-")}</td></tr>', unsafe_allow_html=True)
             st.markdown('</table>', unsafe_allow_html=True)
 
         with col2:
+            st.markdown(f'<div style="text-align:center; font-weight:800; color:#b91c1c;">QUẺ BIẾN</div>', unsafe_allow_html=True)
             st.markdown('<div class="hex-visual-stack">', unsafe_allow_html=True)
             for line in reversed(res['bien']['lines']):
                 cls = "yang-line-pro" if line == 1 else "yin-line-pro"
@@ -1790,10 +1846,11 @@ elif st.session_state.current_view == "luc_hao":
                     st.markdown(f'<div class="{cls}"><div class="yin-half-pro"></div><div class="yin-half-pro"></div></div>', unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
 
-            st.markdown('<table class="hao-table-pro"><tr><th>Hào</th><th>Lục Thân</th><th>Can Chi</th><th>Lục Thú</th></tr>', unsafe_allow_html=True)
+            st.markdown('<table class="hao-table-pro"><tr><th>HÀO</th><th>LỤC THÂN</th><th>CAN CHI</th><th>LỤC THÚ</th></tr>', unsafe_allow_html=True)
             for d in reversed(res['bien']['details']):
-                st.markdown(f'<tr><td>{d["hao"]}</td><td>{d["luc_than"]}</td><td>{d["can_chi"]}</td><td>{d["luc_thu"]}</td></tr>', unsafe_allow_html=True)
+                st.markdown(f'<tr><td>Hào {d["hao"]}</td><td>{d["luc_than"]}</td><td>{d["can_chi"]}</td><td>{d["luc_thu"]}</td></tr>', unsafe_allow_html=True)
             st.markdown('</table>', unsafe_allow_html=True)
+
 
         # Expert Footer
         st.markdown(f"""
