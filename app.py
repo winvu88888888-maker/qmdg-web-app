@@ -366,43 +366,60 @@ st.markdown("""
     .hex-visual-stack {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 12px;
         align-items: center;
         margin: 30px 0;
-        padding: 20px;
-        background: rgba(255, 255, 255, 0.5);
-        border-radius: 15px;
-        border: 1px solid #fef3c7;
+        padding: 30px;
+        background: radial-gradient(circle, #ffffff 0%, #f1f5f9 100%);
+        border-radius: 20px;
+        border: 1px solid #e2e8f0;
+        box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
     }
 
     .hao-line-pro {
-        height: 18px;
-        width: 180px;
-        border-radius: 4px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        height: 22px;
+        width: 220px;
+        border-radius: 6px;
+        position: relative;
+        transition: all 0.3s ease;
     }
 
     .yang-line-pro {
-        background: linear-gradient(90deg, #1e293b, #b91c1c);
+        background: linear-gradient(180deg, #475569 0%, #0f172a 40%, #020617 100%);
+        box-shadow: 
+            0 8px 15px rgba(0,0,0,0.4),
+            inset 0 2px 2px rgba(255,255,255,0.4),
+            inset 0 -2px 5px rgba(0,0,0,0.5);
+        border: 1px solid #0f172a;
     }
 
     .yin-line-pro {
         display: flex;
-        gap: 30px;
-        width: 180px;
+        gap: 40px;
+        width: 220px;
+        filter: drop-shadow(0 8px 12px rgba(0,0,0,0.3));
     }
 
     .yin-half-pro {
         flex: 1;
-        height: 18px;
-        background: linear-gradient(90deg, #1e293b, #b91c1c);
-        border-radius: 4px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        height: 22px;
+        background: linear-gradient(180deg, #475569 0%, #0f172a 40%, #020617 100%);
+        border-radius: 6px;
+        box-shadow: 
+            inset 0 2px 2px rgba(255,255,255,0.4),
+            inset 0 -2px 5px rgba(0,0,0,0.5);
+        border: 1px solid #0f172a;
+    }
     }
 
     .hao-moving-glow {
-        box-shadow: 0 0 15px #f59e0b, 0 0 5px #f59e0b !important;
-        border: 2px solid #fde68a;
+        box-shadow: 
+            0 0 25px rgba(245, 158, 11, 0.8),
+            0 0 10px rgba(245, 158, 11, 0.4),
+            inset 0 0 10px rgba(255, 255, 255, 0.6) !important;
+        border: 2.5px solid #fbbf24 !important;
+        transform: scale(1.03);
+        z-index: 10;
     }
 
     .hao-table-pro {
