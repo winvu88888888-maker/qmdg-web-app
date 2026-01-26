@@ -6,27 +6,44 @@ from pathlib import Path
 from datetime import datetime
 
 
-# Add project root to path (absolute)
-root_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if root_path not in sys.path:
-    sys.path.insert(0, root_path)
-
-# Import modules from ai_modules
-# Import sub-tabs
+# --- ROBUST PATH INITIALIZATION ---
 try:
-    from web.ai_factory_tabs import render_universal_data_hub_tab, render_system_management_tab
-except ImportError:
-    st.error("⚠️ Không thể tìm thấy module web/ai_factory_tabs.py")
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    root_path = os.path.dirname(current_dir)
+    if root_path not in sys.path:
+        sys.path.insert(0, root_path)
+    if current_dir not in sys.path:
+        sys.path.insert(0, current_dir)
+except Exception:
+    pass
+
+# --- ROBUST IMPORTS ---
+try:
+    try:
+        from web.ai_factory_tabs import render_universal_data_hub_tab, render_system_management_tab
+    except ImportError:
+        from ai_factory_tabs import render_universal_data_hub_tab, render_system_management_tab
+except ImportError as e:
+    st.error(f"⚠️ Lỗi nạp Tab bổ trợ: {e}")
     def render_universal_data_hub_tab(): st.error("Tab Dữ Liệu lỗi")
     def render_system_management_tab(): st.error("Tab Quản Trị lỗi")
 
-from ai_modules.orchestrator import AIOrchestrator
-from ai_modules.memory_system import MemorySystem
+# Import modules from ai_modules
 try:
-    from n8n_integration import N8nClient as N8NClient, setup_n8n_config
+    from ai_modules.orchestrator import AIOrchestrator
+    from ai_modules.memory_system import MemorySystem
+except ImportError:
+    st.error("⚠️ Không thể tải ai_modules")
+
+try:
+    try:
+        from n8n_integration import N8nClient as N8NClient, setup_n8n_config
+    except ImportError:
+        import n8n_integration
+        from n8n_integration import N8nClient as N8NClient, setup_n8n_config
 except ImportError:
     # Fallback if module is named differently or not found
-    st.error("⚠️ Không thể tìm thấy module n8n_integration.py")
+    st.info("ℹ️ Chế độ n8n: Sử dụng giả lập (Local Only)")
     class N8NClient:
         def __init__(self, base_url="http://localhost:5678", api_key=None):
             self.base_url = base_url
@@ -35,7 +52,7 @@ except ImportError:
         def get_workflow_statistics(self): return {'total_workflows': 0, 'active_workflows': 0}
         def get_execution_statistics(self): return {'total_executions': 0, 'successful': 0, 'executions': []}
         def get_workflows(self): return []
-    def setup_n8n_config(*args): pass
+    def setup_n8n_config(*args, **kwargs): pass
 
 def render_ai_factory_view():
     """Renders the AI Factory Dashboard within the main application."""
