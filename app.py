@@ -666,7 +666,18 @@ with zoom_col4:
 if 'chu_de_hien_tai' not in st.session_state:
     st.session_state.chu_de_hien_tai = "Tổng Quát"
 if 'all_topics_full' not in st.session_state:
-    st.session_state.all_topics_full = sorted(list(TOPIC_INTERPRETATIONS.keys()))
+    core_topics = list(TOPIC_INTERPRETATIONS.keys())
+    
+    # NEW: Merge topics from the Universal Data Hub
+    hub_topics = []
+    try:
+        from ai_modules.shard_manager import search_index
+        index_results = search_index()
+        hub_topics = list(set([e['title'] for e in index_results]))
+    except Exception:
+        pass
+        
+    st.session_state.all_topics_full = sorted(list(set(core_topics + hub_topics)))
 if 'current_view' not in st.session_state:
     st.session_state.current_view = "ky_mon"  # ky_mon, mai_hoa, luc_hao
 
@@ -901,9 +912,15 @@ with st.sidebar:
     # Topic selection
     st.markdown("### 🎯 Chủ Đề Chính")
     
-    # Search box
-    search_term = st.text_input("🔍 Tìm kiếm chủ đề:", "")
-    
+    # Dynamic Topic Refresh
+    core_topics = list(TOPIC_INTERPRETATIONS.keys())
+    hub_topics = []
+    try:
+        from ai_modules.shard_manager import search_index
+        hub_topics = list(set([e['title'] for e in search_index()]))
+    except Exception: pass
+    st.session_state.all_topics_full = sorted(list(set(core_topics + hub_topics)))
+
     if search_term:
         filtered_topics = [t for t in st.session_state.all_topics_full if search_term.lower() in t.lower()]
     else:

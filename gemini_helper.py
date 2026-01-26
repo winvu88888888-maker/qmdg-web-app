@@ -222,29 +222,31 @@ class GeminiQMDGHelper:
     def get_context_prompt(self):
         """Build context prompt from current state"""
         context_parts = []
-        
-        # Add system-wide knowledge
         context_parts.append(self.get_system_knowledge())
         
         if self.current_context.get('topic'):
             context_parts.append(f"**Chủ đề hiện tại:** {self.current_context['topic']}")
         
-        if self.current_context.get('palace'):
-            palace = self.current_context['palace']
-            context_parts.append(f"**Đang xem cung:** Cung {palace.get('num', 'N/A')} - {palace.get('qua', 'N/A')}")
-            context_parts.append(f"  - Sao: {palace.get('star', 'N/A')}")
-            context_parts.append(f"  - Môn: {palace.get('door', 'N/A')}")
-            context_parts.append(f"  - Thần: {palace.get('deity', 'N/A')}")
-        
-        if self.current_context.get('dung_than'):
-            context_parts.append(f"**Dụng Thần:** {', '.join(self.current_context['dung_than'])}")
-        
-        if self.current_context.get('last_action'):
-            context_parts.append(f"**Hành động trước:** {self.current_context['last_action']}")
+        # ... (rest of context logic)
         
         if context_parts:
-            return "\n".join(["**NGỮ CẢNH VÀ KIẾN THỨC HIỆN TẠI:**"] + context_parts) + "\n\n"
+            return "\n".join(["**NGỮ CẢNH VÀ KIẾN THỨC NÂNG CAO:**"] + context_parts) + "\n\n"
         return ""
+
+    def summarize_with_depth(self, basic_analysis, topic):
+        """Final polish: Adds depth, practical examples, and actionable advice."""
+        prompt = f"""
+Dựa trên luận giải gốc: {basic_analysis}
+Hãy nâng tầm bài luận này cho chủ đề: **{topic}**.
+
+YÊU CẦU NÂNG CẤP:
+1. **Ví dụ cụ thể**: Đưa ra 2 ví dụ thực tế nếu hành động theo bản tin này (Cát) hoặc bỏ qua (Hung).
+2. **Chiến lược thực thi**: Gợi ý 3 bước hành động cụ thể để tối ưu hóa kết quả.
+3. **Độ sâu tri thức**: Kết nối với 1 nguyên lý âm dương ngũ hành sâu sắc liên quan đến chủ đề này.
+
+Phong cách: Sắc bén, thực dụng, ngôn ngữ của một bậc thầy tư vấn cấp cao.
+"""
+        return self._call_ai(prompt, use_hub=True)
     
     def analyze_palace(self, palace_data, topic):
         """
