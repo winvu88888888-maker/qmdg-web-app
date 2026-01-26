@@ -721,28 +721,50 @@ with st.sidebar:
     
     st.markdown("---")
     
-    # Gemini AI Configuration - Auto-load if available
-    # Force re-init if existing helper is missing new methods (e.g. from old session)
+    # --- AI Initialization & Mode Switcher ---
+    st.markdown("### 🤖 Cấu hình AI")
+    ai_col1, ai_col2 = st.columns(2)
+    
+    with ai_col1:
+        if st.button("🌐 Online AI", help="Sử dụng Gemini Pro (Yêu cầu API Key)", use_container_width=True):
+            st.session_state.ai_preference = "online"
+            # Clear existing to force re-init
+            if 'gemini_helper' in st.session_state: del st.session_state.gemini_helper
+            st.rerun()
+            
+    with ai_col2:
+        if st.button("💾 Offline AI", help="Sử dụng Free AI (Dự phòng)", use_container_width=True):
+            st.session_state.ai_preference = "offline"
+            # Clear existing to force re-init
+            if 'gemini_helper' in st.session_state: del st.session_state.gemini_helper
+            st.rerun()
+
+    if 'ai_preference' not in st.session_state:
+        st.session_state.ai_preference = "auto" # Default to auto discovery
+
+    # Actual Initialization Logic
     if 'gemini_helper' not in st.session_state or not hasattr(st.session_state.gemini_helper, 'analyze_mai_hao') or not hasattr(st.session_state.gemini_helper, 'analyze_mai_hoa'):
-        # Load from custom_data.json first
         custom_data = load_custom_data()
         saved_key = custom_data.get("GEMINI_API_KEY")
-        
-        # Then try Streamlit Secrets
         secret_api_key = st.secrets.get("GEMINI_API_KEY", saved_key)
         
-        if secret_api_key and GEMINI_AVAILABLE:
-            try:
-                st.session_state.gemini_helper = GeminiQMDGHelper(secret_api_key)
-                st.session_state.gemini_key = secret_api_key
-                st.session_state.ai_type = "Gemini Pro (Tự động)"
-            except Exception: pass
-        
-        # 2. Fallback to Free/Offline if still nothing
-        if 'gemini_helper' not in st.session_state or not hasattr(st.session_state.gemini_helper, 'analyze_mai_hao') or not hasattr(st.session_state.gemini_helper, 'analyze_mai_hoa'):
+        if st.session_state.ai_preference == "offline":
             if FREE_AI_AVAILABLE:
                 st.session_state.gemini_helper = FreeAIHelper()
-                st.session_state.ai_type = "Free AI (Offline)"
+                st.session_state.ai_type = "Free AI (Manual Offline)"
+        else: # auto or online
+            if secret_api_key and GEMINI_AVAILABLE:
+                try:
+                    st.session_state.gemini_helper = GeminiQMDGHelper(secret_api_key)
+                    st.session_state.gemini_key = secret_api_key
+                    st.session_state.ai_type = "Gemini Pro (Online)"
+                except Exception: 
+                    if st.session_state.ai_preference == "auto" and FREE_AI_AVAILABLE:
+                        st.session_state.gemini_helper = FreeAIHelper()
+                        st.session_state.ai_type = "Free AI (Fallback)"
+            elif FREE_AI_AVAILABLE:
+                st.session_state.gemini_helper = FreeAIHelper()
+                st.session_state.ai_type = "Free AI (Offline Mode)"
 
     # AI Status Display
     ai_status = st.session_state.get('ai_type', 'Chưa sẵn sàng')
