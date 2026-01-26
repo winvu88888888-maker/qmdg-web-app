@@ -119,8 +119,39 @@ class GeminiQMDGHelper:
                 return False, "Đã hết hạn mức sử dụng (Quota) cho model này."
             return False, f"Lỗi: {error_msg}"
 
-    def _call_ai(self, prompt):
-        """Call AI with auto-switch fallback on quota failure"""
+    def _fetch_relevant_hub_data(self, query):
+        """Fetch the most relevant context from the Sharded Hub."""
+        try:
+            from ai_modules.shard_manager import search_index, get_full_entry
+        except ImportError:
+            return ""
+
+        index_results = search_index(query)
+        if not index_results: return ""
+
+        hub_context = "\n**KIẾN THỨC TỪ KHO VÔ TẬN (Đã phân mảnh):**\n"
+        # Take top 3 for prompt context efficiency
+        for e in index_results[:3]:
+            full_data = get_full_entry(e['id'], e['shard'])
+            if full_data:
+                content = full_data['content']
+                if full_data['category'] == "Mã Nguồn":
+                    content = content[:300] + "..." # Truncate large code
+                hub_context += f"📌 [{full_data['category']}] {full_data['title']}: {content}\n\n"
+        
+        return hub_context
+
+    def _call_ai(self, prompt, use_hub=True):
+        """Call AI with auto-switch fallback and optional Hub data injection."""
+        
+        # Inject relevant hub data if requested
+        if use_hub:
+            # Extract main keywords from the prompt for searching
+            search_query = prompt.replace("**", "").replace("#", "")[:100]
+            hub_data = self._fetch_relevant_hub_data(search_query)
+            if hub_data:
+                prompt = hub_data + "\n" + "-"*50 + "\n" + prompt
+
         # Option 1: Use n8n if configured
         if self.n8n_url:
             try:
@@ -133,16 +164,14 @@ class GeminiQMDGHelper:
                 if response.status_code == 200:
                     text = response.json().get('text', '')
                     if text: return text
-                    # If empty text, fallback might be needed or return empty
                 else:
                     print(f"n8n Error: {response.text}")
             except Exception as e:
                 print(f"n8n Exception: {e}")
-                # Fallback to local
         
         # Option 2: Direct Gemini API with Swapping
         import time
-        for attempt in range(3): # 3 attempts, potentially 3 different models
+        for attempt in range(3):
             try:
                 response = self.model.generate_content(prompt)
                 if not response.text:
@@ -152,23 +181,20 @@ class GeminiQMDGHelper:
                 error_msg = str(e)
                 model_name = getattr(self.model, 'model_name', 'unknown').split('/')[-1]
                 
-                # Quota Failure (429) -> Switch Model
                 if "429" in error_msg or "quota" in error_msg.lower():
                     self._failed_models.add(model_name)
                     print(f"Model {model_name} exhausted. Switching...")
-                    self.model = self._get_best_model() # Try to get a NEW model
+                    self.model = self._get_best_model()
                     time.sleep(1)
                     continue
                 
-                # Safety Block
                 if "SAFETY" in error_msg or "blocked" in error_msg.lower():
                     return "🛡️ Nội dung bị chặn do quy tắc an toàn. Thử đổi chủ đề."
                 
-                # If it's the last attempt or a different error, return or raise
                 if attempt == 2:
                     return f"❌ Lỗi AI: {error_msg}\n\nVui lòng đợi hoặc đổi API Key."
                 time.sleep(0.5)
-        return "🛑 **Hết hạn mức AI trên tất cả các dòng model:** Bạn đã dùng hết quota MIỄN PHÍ hằng ngày. Vui lòng thử lại vào ngày mai hoặc dùng API Key khác."
+        return "🛑 **Hết hạn mức AI:** Thử lại sau ít phút."
     
     def update_context(self, **kwargs):
         """Update current context"""

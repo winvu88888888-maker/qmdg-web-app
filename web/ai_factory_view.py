@@ -14,14 +14,16 @@ if current_dir not in sys.path: sys.path.insert(0, current_dir)
 # --- IMPORTS ---
 try:
     try:
-        from web.ai_factory_tabs import render_universal_data_hub_tab, render_system_management_tab, add_to_hub
+        from web.ai_factory_tabs import render_universal_data_hub_tab, render_system_management_tab
+        from ai_modules.shard_manager import add_entry
     except ImportError:
-        from ai_factory_tabs import render_universal_data_hub_tab, render_system_management_tab, add_to_hub
+        from ai_factory_tabs import render_universal_data_hub_tab, render_system_management_tab
+        from shard_manager import add_entry
 except Exception as e:
-    st.error(f"🚨 Lỗi nạp Tab Nhà Máy AI: {e}")
+    st.error(f"🚨 Lỗi nạp Hệ thống: {e}")
     def render_universal_data_hub_tab(): st.error("Tab Dữ Liệu lỗi")
     def render_system_management_tab(): st.error("Tab Quản Trị lỗi")
-    def add_to_hub(*args, **kwargs): return False
+    def add_entry(*args, **kwargs): return False
 
 # Import modules from ai_modules
 try:
@@ -46,7 +48,7 @@ except ImportError:
 
 def render_ai_factory_view():
     st.markdown("## 🏭 NHÀ MÁY AI - PHÁT TRIỂN TỰ ĐỘNG")
-    st.info("Hệ thống tích hợp n8n: Kỳ Môn Độn Giáp định hướng chiến lược & Gemini AI thực thi kỹ thuật.")
+    st.info("Hệ thống tích hợp n8n & Sharded Data Hub: Tự động hóa 24/7.")
     
     if 'orchestrator' not in st.session_state:
         if 'gemini_key' in st.session_state and st.session_state.gemini_key:
@@ -75,41 +77,45 @@ def render_ai_factory_view():
     with tab6: render_system_management_tab()
 
 def render_dashboard_tab():
-    st.subheader("Thống Kê Hoạt Động")
+    st.subheader("Thống Kê Hoạt Động (Real-time)")
     stats = st.session_state.memory.get_statistics()
     col1, col2, col3, col4 = st.columns(4)
     s = 'padding:15px;border-radius:10px;border-left:5px solid '
-    col1.markdown(f'<div style="{s}#667eea;background:#f8f9fa"><h3>📁 {stats.get("total_code_files", 0)}</h3><p>File Code</p></div>', unsafe_allow_html=True)
-    col2.markdown(f'<div style="{s}#764ba2;background:#f8f9fa"><h3>📚 {stats.get("total_knowledge", 0)}</h3><p>Kiến Thức</p></div>', unsafe_allow_html=True)
-    col3.markdown(f'<div style="{s}#2ecc71;background:#f8f9fa"><h3>⚡ {stats.get("total_executions", 0)}</h3><p>Lần Chạy</p></div>', unsafe_allow_html=True)
+    col1.markdown(f'<div style="{s}#667eea;background:#f8f9fa"><h3>📁 {stats.get("total_code_files", 0)}</h3><p>Đã tạo</p></div>', unsafe_allow_html=True)
+    col2.markdown(f'<div style="{s}#764ba2;background:#f8f9fa"><h3>📚 {stats.get("total_knowledge", 0)}</h3><p>Tri thức</p></div>', unsafe_allow_html=True)
+    col3.markdown(f'<div style="{s}#2ecc71;background:#f8f9fa"><h3>⚡ {stats.get("total_executions", 0)}</h3><p>Vận hành</p></div>', unsafe_allow_html=True)
     success = stats.get("executions_by_status", {}).get("success", 0)
     total = max(1, stats.get("total_executions", 0))
-    col4.markdown(f'<div style="{s}#e74c3c;background:#f8f9fa"><h3>✅ {int(success/total*100)}%</h3><p>Thành Công</p></div>', unsafe_allow_html=True)
+    col4.markdown(f'<div style="{s}#e74c3c;background:#f8f9fa"><h3>✅ {int(success/total*100)}%</h3><p>Hiệu suất</p></div>', unsafe_allow_html=True)
 
 def render_create_code_tab():
     if st.session_state.orchestrator is None:
-        st.warning("⚠️ Vui lòng nhập Gemini API key ở Sidebar.")
+        st.warning("⚠️ Nhập Gemini API key để bắt đầu.")
         return
     if 'last_res' not in st.session_state: st.session_state.last_res = None
 
     with st.form("gen_form"):
         req = st.text_area("Mô tả phần mềm:", height=100)
-        if st.form_submit_button("🚀 Bắt Đầu"):
-            with st.spinner("🤖 AI đang làm việc..."):
+        if st.form_submit_button("🚀 Kích Hoạt AI Factory"):
+            with st.spinner("🤖 Đang phân tích và viết code..."):
                 try:
                     res = st.session_state.orchestrator.process_request(req)
                     nm = res.get('plan',{}).get('project_name','Project')
-                    add_to_hub(f"Yêu cầu: {nm}", f"REQ: {req}", "Nghiên Cứu")
+                    
+                    # Store in SCALABLE HUB
+                    add_entry(f"Yêu cầu: {nm}", f"Mô tả: {req}\n\nPlan: {json.dumps(res.get('plan',{}), indent=2)}", "Nghiên Cứu", source="AI Architect")
                     for f_p in res.get('execution',{}).get('created_files',[]):
                         if os.path.exists(f_p):
-                            add_to_hub(f"Source: {os.path.basename(f_p)}", f"```python\n{open(f_p,'r',encoding='utf-8').read()}\n```", "Mã Nguồn")
+                            with open(f_p,'r',encoding='utf-8') as content:
+                                add_entry(f"Source: {os.path.basename(f_p)}", f"```python\n{content.read()}\n```", "Mã Nguồn", source="AI Coder")
+                    
                     st.session_state.last_res = res
                     st.rerun()
                 except Exception as e: st.error(f"Lỗi: {e}")
 
     if st.session_state.last_res:
         res = st.session_state.last_res
-        st.success("✅ Đã hoàn tất và tự động lưu trữ!")
+        st.success("✅ Dự án hoàn tất! Đã lưu trữ Shard và đồng bộ GitHub.")
         if res.get('package') and os.path.exists(res['package']):
             st.download_button("📥 Tải (.zip)", open(res['package'],"rb"), file_name=os.path.basename(res['package']))
         for f_p in res.get('execution',{}).get('created_files',[]):
@@ -117,7 +123,7 @@ def render_create_code_tab():
                 with st.expander(os.path.basename(f_p)): st.code(open(f_p, 'r', encoding='utf-8').read())
 
 def render_knowledge_base_tab():
-    q = st.text_input("🔍 Tìm kiếm:")
+    q = st.text_input("🔍 Truy vấn tri thức nhanh:")
     if q:
         for i in st.session_state.memory.search_knowledge(q):
             with st.expander(i['topic']): st.markdown(i['content'])
