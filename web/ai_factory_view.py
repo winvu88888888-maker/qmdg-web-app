@@ -14,10 +14,10 @@ if current_dir not in sys.path: sys.path.insert(0, current_dir)
 # --- IMPORTS ---
 try:
     try:
-        from web.ai_factory_tabs import render_universal_data_hub_tab, render_system_management_tab
+        from web.ai_factory_tabs import render_universal_data_hub_tab, render_system_management_tab, render_mining_summary_on_dashboard
         from ai_modules.shard_manager import add_entry
     except ImportError:
-        from ai_factory_tabs import render_universal_data_hub_tab, render_system_management_tab
+        from ai_factory_tabs import render_universal_data_hub_tab, render_system_management_tab, render_mining_summary_on_dashboard
         from shard_manager import add_entry
 except Exception as e:
     st.error(f"🚨 Lỗi nạp Hệ thống: {e}")
@@ -87,6 +87,9 @@ def render_dashboard_tab():
     success = stats.get("executions_by_status", {}).get("success", 0)
     total = max(1, stats.get("total_executions", 0))
     col4.markdown(f'<div style="{s}#e74c3c;background:#f8f9fa"><h3>✅ {int(success/total*100)}%</h3><p>Hiệu suất</p></div>', unsafe_allow_html=True)
+    
+    st.markdown("---")
+    render_mining_summary_on_dashboard()
 
 def render_create_code_tab():
     if st.session_state.orchestrator is None:
