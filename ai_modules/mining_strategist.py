@@ -37,38 +37,46 @@ class MiningStrategist:
             ]
         }
 
+    def evolve_categories(self, new_findings):
+        """Allows the AI to add new categories based on what it discovers on the internet."""
+        # Logic to be called by the miner when it finds something outside current scope
+        for cat, topics in new_findings.items():
+            if cat not in self.categories:
+                self.categories[cat] = topics
+            else:
+                self.categories[cat] = list(set(self.categories[cat] + topics))
+
     def generate_research_queue(self, category=None, count=5):
-        """Generates a list of deep-dive sub-topics."""
+        """Generates a list of deep-dive sub-topics with emphasis on NEW fields."""
         if category and category in self.categories:
             base_topics = self.categories[category]
         else:
-            # Pick a random category if none specified
+            # Shift categories over time to explore new areas
             cat = random.choice(list(self.categories.keys()))
             base_topics = self.categories[cat]
             
         queue = []
         for _ in range(count):
             topic = random.choice(base_topics)
-            # Add a recursive depth factor: specific angle
+            # Add a recursive depth factor focused on PRACTICALITY
             angle = random.choice([
-                "Mới nhất 2026", "Bí truyền cổ tịch", "Ứng dụng thực tế", 
-                "Phân tích chuyên sâu", "So sánh đối chiếu", "Lỗi thường gặp"
+                "Ví dụ thực tế 2026", "Ứng dụng đời đời", "Case study thành công", 
+                "Hướng dẫn chi tiết từng bước", "Phân tích sai lầm thực tế", "Giải pháp tối ưu"
             ])
             queue.append(f"{topic}: {angle}")
             
-        return list(set(queue)) # Unique topics only
+        return list(set(queue))
 
     def synthesize_mining_prompt(self, target_topic):
-        """Creates a specialized system prompt for an AI agent to 'mine' this topic."""
+        """Creates a specialized system prompt for an AI agent to 'mine' this topic with EXAMPLE focus."""
         return f"""
-Bạn là một Đặc phái viên AI thuộc 'Quân đoàn AI Khai thác 24/7'.
-Nhiệm vụ của bạn: Khai thác toàn bộ thông tin TẬN CÙNG và TINH TÚY NHẤT về chủ đề: **{target_topic}**.
+Bạn là một Đặc phái viên AI 'Khai thác Đa tầng'. 
+Nhiệm vụ: Khai thác tri thức về **{target_topic}**.
 
-YÊU CẦU:
-1. Đào sâu vào các chi tiết kỹ thuật, bí quyết hoặc dữ liệu hiếm.
-2. Nếu là code: Phải cung cấp đoạn mã tối ưu và thực dụng.
-3. Nếu là kiến thức cổ: Phải trích dẫn hoặc dịch nghĩa súc tích.
-4. Cấu trúc bài nạp phải gồm: Tiêu đề, Nội dung chi tiết, Phân loại, và Nguồn tổng hợp.
+YÊU CẦU BẮT BUỘC:
+1. **TRANG BỊ VÍ DỤ THỰC TẾ**: Cung cấp ít nhất 3 ví dụ hoặc tình huống thực tế minh họa cho kiến thức này.
+2. **DỮ LIỆU GỐC**: Trích xuất các thông số, thuật toán hoặc văn bản gốc (cổ văn/mã nguồn).
+3. **LIÊN KẾT CHỦ ĐỀ MỚI**: Đề xuất 2-3 chủ đề liên quan tiềm năng chưa có trong danh sách hiện tại.
 
-Hãy tổng hợp như một chuyên gia hàng đầu, không bỏ sót một chi tiết quan trọng nào trên Internet.
+Hãy trả về nội dung cực kỳ chi tiết, bám sát thực tế và sẵn sàng để 'nạp' vào hệ thống tri thức.
 """

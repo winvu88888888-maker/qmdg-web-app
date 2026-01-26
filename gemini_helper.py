@@ -146,11 +146,15 @@ class GeminiQMDGHelper:
         
         # Inject relevant hub data if requested
         if use_hub:
-            # Extract main keywords from the prompt for searching
             search_query = prompt.replace("**", "").replace("#", "")[:100]
             hub_data = self._fetch_relevant_hub_data(search_query)
             if hub_data:
-                prompt = hub_data + "\n" + "-"*50 + "\n" + prompt
+                # FORCE AI to use this data with high priority
+                instruction = (
+                    "\n[QUAN TRỌNG: SỬ DỤNG DỮ LIỆU DƯỚI ĐÂY ĐỂ TRẢ LỜI VÀ ĐƯA RA VÍ DỤ THỰC TẾ]\n"
+                    "Dựa trên dữ liệu từ Kho tri thức của bạn, hãy cung cấp câu trả lời bám sát và đưa ra ít nhất 1-2 ví dụ thực tế cụ thể.\n"
+                )
+                prompt = hub_data + instruction + "-"*50 + "\n" + prompt
 
         # Option 1: Use n8n if configured
         if self.n8n_url:
