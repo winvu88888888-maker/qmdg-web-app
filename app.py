@@ -428,6 +428,25 @@ st.markdown("""
         border: 2px solid #ffffff !important;
     }
 
+    .hao-row-pro {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .hao-info-pro {
+        font-size: 0.9rem;
+        font-weight: 800;
+        color: #1e293b;
+        margin-left: 15px;
+        white-space: nowrap;
+        background: rgba(255,255,255,0.7);
+        padding: 2px 8px;
+        border-radius: 4px;
+        border-right: 3px solid #b91c1c;
+    }
+
     .hao-label-pro {
         font-size: 0.75rem;
         font-weight: 800;
@@ -1914,18 +1933,21 @@ elif st.session_state.current_view == "luc_hao":
             st.markdown(f'<div style="text-align:center; font-weight:800; color:#b91c1c;">QUẺ CHỦ ({res["ban"]["palace"]})</div>', unsafe_allow_html=True)
             st.markdown('<div class="hex-visual-stack">', unsafe_allow_html=True)
             moving_hao = res.get('dong_hao', [])
+            detail_map_ban = {d['hao']: d for d in res['ban']['details']}
             for i, line in enumerate(reversed(res['ban']['lines'])):
                 h_idx = 6 - i
                 is_dong = h_idx in moving_hao
                 cls = "yang-line-pro" if line == 1 else "yin-line-pro"
                 dong_cls = "hao-moving-red" if is_dong else ""
+                d = detail_map_ban.get(h_idx, {})
                 
-                st.markdown('<div style="display:flex; align-items:center;">', unsafe_allow_html=True)
+                st.markdown('<div class="hao-row-pro">', unsafe_allow_html=True)
                 st.markdown(f'<div class="hao-label-pro">Hào {h_idx}</div>', unsafe_allow_html=True)
                 if line == 1:
                     st.markdown(f'<div class="hao-line-pro {cls} {dong_cls}"></div>', unsafe_allow_html=True)
                 else:
                     st.markdown(f'<div class="{cls}"><div class="yin-half-pro {dong_cls}"></div><div class="yin-half-pro {dong_cls}"></div></div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="hao-info-pro">{d.get("luc_than","")} | {d.get("can_chi","")} {d.get("marker","")}</div>', unsafe_allow_html=True)
                 st.markdown('</div>', unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
 
@@ -1940,15 +1962,19 @@ elif st.session_state.current_view == "luc_hao":
         with col2:
             st.markdown(f'<div style="text-align:center; font-weight:800; color:#b91c1c;">QUẺ BIẾN</div>', unsafe_allow_html=True)
             st.markdown('<div class="hex-visual-stack">', unsafe_allow_html=True)
+            detail_map_bien = {d['hao']: d for d in res['bien'].get('details', [])}
             for i, line in enumerate(reversed(res['bien']['lines'])):
                 h_idx = 6 - i
                 cls = "yang-line-pro" if line == 1 else "yin-line-pro"
-                st.markdown('<div style="display:flex; align-items:center;">', unsafe_allow_html=True)
+                d = detail_map_bien.get(h_idx, {})
+                
+                st.markdown('<div class="hao-row-pro">', unsafe_allow_html=True)
                 st.markdown(f'<div class="hao-label-pro">Hào {h_idx}</div>', unsafe_allow_html=True)
                 if line == 1:
                     st.markdown(f'<div class="hao-line-pro {cls}"></div>', unsafe_allow_html=True)
                 else:
                     st.markdown(f'<div class="{cls}"><div class="yin-half-pro"></div><div class="yin-half-pro"></div></div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="hao-info-pro">{d.get("luc_than","")} | {d.get("can_chi","")} | {d.get("luc_thu","")}</div>', unsafe_allow_html=True)
                 st.markdown('</div>', unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
 

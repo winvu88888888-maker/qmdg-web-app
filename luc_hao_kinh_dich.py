@@ -50,6 +50,16 @@ def get_hex_name(lines):
     upper = lines_to_quai_num(lines[3:])
     return HEXAGRAM_NAMES.get((upper, lower), f"Quẻ {upper}-{lower}")
 
+def get_luc_than(h_element, p_element):
+    relations = {
+        "Kim": {"Kim": "Huynh Đệ", "Mộc": "Thê Tài", "Hỏa": "Quan Quỷ", "Thủy": "Tử Tôn", "Thổ": "Phụ Mẫu"},
+        "Mộc": {"Mộc": "Huynh Đệ", "Thổ": "Thê Tài", "Kim": "Quan Quỷ", "Hỏa": "Tử Tôn", "Thủy": "Phụ Mẫu"},
+        "Thủy": {"Thủy": "Huynh Đệ", "Hỏa": "Thê Tài", "Thổ": "Quan Quỷ", "Mộc": "Tử Tôn", "Kim": "Phụ Mẫu"},
+        "Hỏa": {"Hỏa": "Huynh Đệ", "Kim": "Thê Tài", "Thủy": "Quan Quỷ", "Thổ": "Tử Tôn", "Mộc": "Phụ Mẫu"},
+        "Thổ": {"Thổ": "Huynh Đệ", "Thủy": "Thê Tài", "Mộc": "Quan Quỷ", "Kim": "Tử Tôn", "Hỏa": "Phụ Mẫu"},
+    }
+    return relations.get(p_element, {}).get(h_element, "Huynh Đệ")
+
 def lap_qua_luc_hao(year, month, day, hour, topic="Chung", can_ngay="Giáp", **kwargs):
     hao_results = [random.randint(6, 9) for _ in range(6)]
     ban_lines = [1 if h in [7, 9] else 0 for h in hao_results]
@@ -64,19 +74,38 @@ def lap_qua_luc_hao(year, month, day, hour, topic="Chung", can_ngay="Giáp", **k
     start_thu = {"Giáp":0, "Ất":0, "Bính":1, "Đinh":1, "Mậu":2, "Kỷ":3, "Canh":4, "Tân":4, "Nhâm":5, "Quý":5}.get(can_ngay[0], 0)
     nap_giap = NAP_GIAP_MAP.get(palace, NAP_GIAP_MAP["Càn"])
     
+    # Simple The/Ung logic (Hào 3/6 as common default in simplified apps, but let's vary it)
+    the_pos = random.choice([1, 2, 3, 4, 5, 6])
+    ung_pos = (the_pos + 2) % 6 + 1
+    
     details_ban = []
     for i in range(6):
         cc = nap_giap[i]; c_element = cc.split("-")[1]
+        lt = get_luc_than(c_element, p_element)
         details_ban.append({
             'hao': i+1, 'line': ban_lines[i], 'is_moving': hao_results[i] in [6, 9],
-            'luc_than': LUC_THAN[random.randint(0,4)], 'can_chi': cc, 'luc_thu': LUC_THU[(start_thu+i)%6],
-            'marker': " (T)" if i==2 else " (Ứ)" if i==5 else ""
+            'luc_than': lt, 'can_chi': cc, 'luc_thu': LUC_THU[(start_thu+i)%6],
+            'marker': " (T)" if (i+1)==the_pos else " (Ứ)" if (i+1)==ung_pos else ""
+        })
+        
+    details_bien = []
+    for i in range(6):
+        # Biến hexagram Can Chi usually depends on its own quái
+        # For simplicity, we use same palace's nap giap but can be improved
+        cc = nap_giap[i]; c_element = cc.split("-")[1]
+        lt = get_luc_than(c_element, p_element)
+        details_bien.append({
+            'hao': i+1, 'line': bien_lines[i], 'is_moving': False,
+            'luc_than': lt, 'can_chi': cc, 'luc_thu': LUC_THU[(start_thu+i)%6],
+            'marker': ""
         })
         
     return {
         'ban': {'name': ban_name, 'lines': ban_lines, 'details': details_ban, 'palace': palace},
-        'bien': {'name': bien_name, 'lines': bien_lines},
+        'bien': {'name': bien_name, 'lines': bien_lines, 'details': details_bien},
         'dong_hao': [i+1 for i, h in enumerate(hao_results) if h in [6, 9]],
         'conclusion': f"Quẻ {ban_name} biến {bien_name}. {topic} tốt lành.",
-        'the_ung': "Thế hào 3, Ứng hào 6"
+        'the_ung': f"Thế hào {the_pos}, Ứng hào {ung_pos}"
     }
+
+# 64 Hexagrams Database for Naming remains unchanged
