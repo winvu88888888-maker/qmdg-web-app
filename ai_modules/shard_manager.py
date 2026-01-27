@@ -136,3 +136,26 @@ def delete_entry(entry_id):
         json.dump(index_data, f, indent=2, ensure_ascii=False)
     
     return True
+
+def get_hub_stats():
+    """Get statistics about the entire data hub (Total, Categories, Disk Size)."""
+    if not os.path.exists(INDEX_FILE):
+        return {"total": 0, "categories": {}, "size_mb": 0.0}
+    
+    try:
+        with open(INDEX_FILE, 'r', encoding='utf-8') as f:
+            index_data = json.load(f)
+        
+        stats = index_data.get("stats", {"total": 0, "categories": {}})
+        
+        # Calculate total disk size
+        total_bytes = 0
+        for f in os.listdir(BASE_HUB_DIR):
+            fp = os.path.join(BASE_HUB_DIR, f)
+            if os.path.isfile(fp):
+                total_bytes += os.path.getsize(fp)
+                
+        stats["size_mb"] = round(total_bytes / (1024 * 1024), 2)
+        return stats
+    except:
+        return {"total": 0, "categories": {}, "size_mb": 0.0}

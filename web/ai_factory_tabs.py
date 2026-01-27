@@ -20,9 +20,9 @@ ROOT_DIR = setup_sub_paths()
 
 # --- IMPORT SHARD MANAGER ---
 try:
-    from shard_manager import add_entry, search_index, get_full_entry, delete_entry
+    from shard_manager import add_entry, search_index, get_full_entry, delete_entry, get_hub_stats
 except ImportError:
-    from ai_modules.shard_manager import add_entry, search_index, get_full_entry, delete_entry
+    from ai_modules.shard_manager import add_entry, search_index, get_full_entry, delete_entry, get_hub_stats
 
 # --- TOP 5 HOT TOPICS LOGIC ---
 def get_top_5_hot_topics():
@@ -71,6 +71,32 @@ def get_50_miners():
 def render_universal_data_hub_tab():
     st.subheader("🌐 Kho Dữ Liệu Vô Tận (Scalable Hub)")
     st.info("Hệ thống lưu trữ Đa Tầng: Tốc độ xử lý vĩnh cửu.")
+
+    # Data Volume Stats Button
+    if st.button("📊 KIỂM TRA DỮ LIỆU ĐÃ TẢI", use_container_width=True, type="primary"):
+        stats = get_hub_stats()
+        st.markdown(f"""
+        <div style="background: #f1f5f9; padding: 20px; border-radius: 12px; border-left: 8px solid #3b82f6; margin: 10px 0;">
+            <h3 style="color: #1e293b; margin-top: 0;">📈 Báo Cáo Lưu Trữ AI Factory</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <p style="color: #64748b; font-size: 0.9rem; margin: 0;">Tổng số bản ghi</p>
+                    <h2 style="color: #3b82f6; margin: 5px 0;">{stats['total']}</h2>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <p style="color: #64748b; font-size: 0.9rem; margin: 0;">Tổng dung lượng</p>
+                    <h2 style="color: #10b981; margin: 5px 0;">{stats['size_mb']} MB</h2>
+                </div>
+            </div>
+            <div style="margin-top: 15px;">
+                <p style="font-weight: 700; color: #1e293b; margin-bottom: 5px;">📂 Phân bổ theo phân loại:</p>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    {" ".join([f'<span style="background:#e2e8f0; padding:4px 10px; border-radius:20px; font-size:0.8rem;">{k}: {v}</span>' for k,v in stats['categories'].items()])}
+                </div>
+            </div>
+            <p style="font-style: italic; font-size: 0.8rem; color: #94a3b8; margin-top: 15px;">* Dữ liệu được tính toán thời gian thực từ Sharded Hub.</p>
+        </div>
+        """, unsafe_allow_html=True)
 
     categories = ["Mã Nguồn", "Nghiên Cứu", "Kiến Thức", "Kỳ Môn Độn Giáp", "Kinh Dịch", "Khác"]
 
