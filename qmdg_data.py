@@ -626,237 +626,110 @@ def tinh_dich_ma(dia_chi_gio):
 
 def lap_ban_qmdg(cuc, truc_phu_star, truc_su_door, can_gio, chi_gio, is_duong_don):
     """
-    Lập bàn QMDG đầy đủ theo quy luật chuyển động.
+    Lập bàn QMDG chuẩn xác theo quy tắc xoay Thiên, Nhân, Thần.
     """
-    # 1. Định nghĩa vị trí Cố Định (Gốc)
-    # Cửu Tinh Gốc (Địa Bàn)
-    SAO_GOC = {
-        1: "Thiên Bồng", 2: "Thiên Nhuế", 3: "Thiên Xung", 4: "Thiên Phụ",
-        5: "Thiên Cầm", 6: "Thiên Tâm", 7: "Thiên Trụ", 8: "Thiên Nhậm", 9: "Thiên Anh"
-    }
-    # Bát Môn Gốc
-    MON_GOC = {
-        1: "Hưu", 2: "Tử", 3: "Thương", 4: "Đỗ", 
-        6: "Khai", 7: "Kinh", 8: "Sinh", 9: "Cảnh"
-    }
-    
-    # 2. Lập Địa Bàn (Lục Nghi)
+    SAO_GOC = {1: "Thiên Bồng", 2: "Thiên Nhuế", 3: "Thiên Xung", 4: "Thiên Phụ", 5: "Thiên Cầm", 6: "Thiên Tâm", 7: "Thiên Trụ", 8: "Thiên Nhậm", 9: "Thiên Anh"}
+    MON_GOC = {1: "Hưu", 2: "Tử", 3: "Thương", 4: "Đỗ", 6: "Khai", 7: "Kinh", 8: "Sinh", 9: "Cảnh"}
+    RING = [1, 8, 3, 4, 9, 2, 7, 6] # Vòng xoay cố định của Hoạt Bàn
+
+    # 1. Lập Địa Bàn
     dia_ban = an_bai_luc_nghi(cuc, is_duong_don)
-    
-    # 3. Tìm vị trí hiện tại của Trực Phù (Star) và Trực Sử (Door) trên Địa Bàn
-    # Trực Phù và Trực Sử đã được xác định tên ở ngoài, giờ tìm vị trí gốc của chúng
-    # Để biết chúng "mang" Can nào đi đâu.
-    
-    # Tìm cung gốc của Sao Trực Phù
+
+    # 2. Tìm vị trí gốc
+    t_star = truc_phu_star.split('/')[0] if '/' in truc_phu_star else truc_phu_star
     cung_goc_truc_phu = 0
     for c, s in SAO_GOC.items():
-        if s in truc_phu_star: # Sử dụng 'in' để khớp "Thiên Nhuế/Cầm"
+        if s == t_star:
             cung_goc_truc_phu = c
             break
-            
-    # Tìm cung gốc của Môn Trực Sử
+    
+    t_door = truc_su_door.replace(" Môn", "")
     cung_goc_truc_su = 0
     for c, m in MON_GOC.items():
-        if m == truc_su_door:
+        if m == t_door:
             cung_goc_truc_su = c
             break
-    if cung_goc_truc_su == 0 and truc_su_door == "Tử": cung_goc_truc_su = 2 # Fallback cho Tử
-    
-    # 4. Xác định Cung Đích của Trực Phù (Thiên Bàn)
-    # Trực Phù bay đến cung có Can Giờ trên Địa Bàn.
+    if not cung_goc_truc_su and t_door == "Tử": cung_goc_truc_su = 2
+
+    # 3. An Thiên Bàn (Heaven Plate)
     target_stem = can_gio
     if target_stem == "Giáp":
-        # Tìm Tuần Thủ dựa trên Chi Giờ (Vì Can là Giáp)
-        # Giáp Tý -> Mậu, Giáp Tuất -> Kỷ ...
-        # Mapping Chi -> Tuần Thủ (chỉ đúng khi Can là Giáp)
-        # Tý(0)->Mậu, Tuất(10)->Kỷ, Thân(8)->Canh, Ngọ(6)->Tân, Thìn(4)->Nhâm, Dần(2)->Quý
-        map_giap = {"Tý": "Mậu", "Tuất": "Kỷ", "Thân": "Canh", "Ngọ": "Tân", "Thìn": "Nhâm", "Dần": "Quý"}
+        map_giap = {"Tý":"Mậu", "Tuất":"Kỷ", "Thân":"Canh", "Ngọ":"Tân", "Thìn":"Nhâm", "Dần":"Quý"}
         target_stem = map_giap.get(chi_gio, "Mậu")
-    
+        
     cung_dich_truc_phu = 0
     for c, can in dia_ban.items():
         if can == target_stem:
             cung_dich_truc_phu = c
             break
-            
-    if cung_dich_truc_phu == 0:
-        # Fallback nếu không tìm thấy
-        cung_dich_truc_phu = cung_goc_truc_phu
-
-    # 5. Xoay Thiên Bàn (Chuyển Sao và Can Thiên)
-    # Tính độ lệch (Offset)
-    # Logic xoay vòng: 1->8->3->4->9->2->7->6 (Vòng Cửu Cung Lạc Thư)
-    QUEUE_CUNG = [1, 8, 3, 4, 9, 2, 7, 6]
-    
-    try:
-        idx_src = QUEUE_CUNG.index(cung_goc_truc_phu)
-        idx_dst = QUEUE_CUNG.index(cung_dich_truc_phu)
-        offset_sao = idx_dst - idx_src
-    except ValueError:
-        # Cung 5 (Trung Cung)? Thiên Cầm (5) thường đi theo Thiên Nhuế (2)
-        if cung_goc_truc_phu == 5:
-            # Thiên Cầm ký ở cung 2
-            try:
-                idx_src = QUEUE_CUNG.index(2)
-                idx_dst = QUEUE_CUNG.index(cung_dich_truc_phu)
-                offset_sao = idx_dst - idx_src
-            except: offset_sao = 0
-        else:
-            offset_sao = 0
+    if not cung_dich_truc_phu: cung_dich_truc_phu = cung_goc_truc_phu
 
     thien_ban = {}
     can_thien_ban = {}
     
-    # Sao và Can gốc di chuyển cùng nhau
-    for c_goc in SAO_GOC:
-        sao = SAO_GOC[c_goc]
-        can_goc = dia_ban.get(c_goc, "N/A") # Can Thiên lấy từ Địa Bàn gốc tại vị trí sao đứng
+    try:
+        src_p = 2 if cung_goc_truc_phu == 5 else cung_goc_truc_phu
+        dst_p = 2 if cung_dich_truc_phu == 5 else cung_dich_truc_phu
         
-        # Cung 5 (Thiên Cầm) đi cùng Cung 2 (Thiên Nhuế)
-        target_c_goc = c_goc
-        if c_goc == 5: target_c_goc = 2
+        idx_src = RING.index(src_p)
+        idx_dst = RING.index(dst_p)
+        offset = idx_dst - idx_src
+        
+        for p_goc in RING:
+            sao = SAO_GOC[p_goc]
+            can_goc = dia_ban.get(p_goc, "Mậu")
             
-        try:
-            current_idx = QUEUE_CUNG.index(target_c_goc)
-            new_idx = (current_idx + offset_sao) % 8
-            cung_moi = QUEUE_CUNG[new_idx]
+            idx_new = (RING.index(p_goc) + offset) % 8
+            p_moi = RING[idx_new]
             
-            # Lưu Thiên Bàn
-            if c_goc == 5: # Thiên Cầm
-                 # Thiên Cầm đi cùng Thiên Nhuế (2)
-                 pass
+            if sao == "Thiên Nhuế":
+                thien_ban[p_moi] = "Thiên Nhuế/Cầm"
             else:
-                thien_ban[cung_moi] = sao
-                can_thien_ban[cung_moi] = can_goc
-                
-                # Nếu cung này là nơi Thiên Nhuế đến, gán thêm Thiên Cầm
-                if sao == "Thiên Nhuế":
-                    # Tìm can của Thiên Cầm (từ cung gốc 5)
-                    can_cam = dia_ban.get(5, "Mậu")
-                    # Gán Thiên Cầm vào cùng cung
-                    # Trong hiển thị, ta có thể dùng dấu / hoặc newline, 
-                    # nhưng cấu trúc hiện tại là 1 string.
-                    thien_ban[cung_moi] = "Thiên Nhuế/Cầm"
-                    # Can thiên cũng có thể kép hoặc lấy của Nhuế? 
-                    # Thường Cầm và Nhuế dùng chung Can Thiên của cung đích.
-                
-        except ValueError: pass
-        
-    # Xử lý Thiên Cầm đặc biệt: Luôn đi kèm Thiên Nhuế
-    # Tìm cung mới của Thiên Nhuế
-    for c, s in thien_ban.items():
-        if s == "Thiên Nhuế":
-            # Gán thêm Thiên Cầm hoặc đánh dấu?
-            # Để đơn giản, ta không lưu key riêng cho Cầm ở các cung khác 5,
-            # Mà mặc định Cầm đi theo Nhuế trong hiển thị (App lo).
-            # Ở đây ta trả về Cầm ở vị trí của Nhuế để tham khảo
-            pass
+                thien_ban[p_moi] = sao
+            can_thien_ban[p_moi] = can_goc
+    except: pass
 
-    # 6. Xoay Nhân Bàn (Chuyển Môn)
-    # Trực Sử (Lead Door) di chuyển theo số giờ (Chi Giờ)
-    # Nguyên tắc: Từ Cung của Phù Đầu (Leader), đếm thuận/nghịch theo Dương/Âm Độn
-    # cho đến Chi Giờ hiện tại.
-    # Mỗi giờ (1 canh) đi 1 cung.
-    # Thứ tự cung đi: 1, 2, 3, 4, 5, 6, 7, 8, 9 (Theo Lạc Thư số)
-    # Nếu gặp 5 thì chuyển sang 2 (Khôn).
+    # 4. An Nhân Bàn (Human Plate)
+    CAN_L = ["Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ", "Canh", "Tân", "Nhâm", "Quý"]
+    CHI_L = ["Tý", "Sửu", "Dần", "Mão", "Thìn", "Tị", "Ngọ", "Mùi", "Thân", "Dậu", "Tuất", "Hợi"]
+    idx_can_h = CAN_L.index(can_gio)
+    idx_chi_h = CHI_L.index(chi_gio)
+    leader_chi_idx = (idx_chi_h - idx_can_h) % 12
+    steps = (idx_chi_h - leader_chi_idx) % 12
     
-    # a. Tìm chênh lệch giờ (Chi Giờ - Chi Leader)
-    # Leader Stem (Mậu/Kỷ...) ẩn Giáp. 
-    # Ta biết cung của Leader (cung_tuan_thu -> cung_goc_truc_su)
-    # Nhưng ta cần biết Chi của Leader.
-    # Leader là Giáp Tý, Giáp Tuất...?
-    # Trong hàm calculate_qmdg_params có tính luc_nghi_tuan_thu (Mậu..). 
-    # Nhưng ở đây ta chỉ có can_gio, chi_gio.
-    # Ta cần tính lại Tuần Thủ của giờ hiện tại để biết Chi khởi đầu.
-    # Ví dụ: Giờ Bính Dần.
-    # Dần (2) - Bính (2) = 0 -> Giáp Tý (0). Chi Leader = Tý.
-    # Khoảng cách = Dần - Tý = 2.
-    
-    # Tính lại Chi Leader
-    CAN_LIST = ["Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ", "Canh", "Tân", "Nhâm", "Quý"]
-    CHI_LIST = ["Tý", "Sửu", "Dần", "Mão", "Thìn", "Tị", "Ngọ", "Mùi", "Thân", "Dậu", "Tuất", "Hợi"]
+    LAC_THU = [1, 2, 3, 4, 5, 6, 7, 8, 9] if is_duong_don else [9, 8, 7, 6, 5, 4, 3, 2, 1]
     
     try:
-        idx_can = CAN_LIST.index(can_gio)
-        idx_chi = CHI_LIST.index(chi_gio)
-        diff_val = (idx_chi - idx_can) % 12 # Chi - Can
-        # Leader start at this diff. 
-        # Ví dụ: Bính(2) Dần(2) -> Diff=0 (Tý). Leader là Giáp Tý.
-        # Bính(2) Thân(8). 8-2=6 (Ngọ). Leader là Giáp Ngọ.
-        idx_chi_leader = diff_val
-        
-        # Số bước di chuyển = Chi Giờ - Chi Leader
-        steps = (idx_chi - idx_chi_leader) % 12
-    except ValueError: 
-        steps = 0
-        
-    # b. Di chuyển từ Cung Leader (cung_tuan_thu)
-    # Thay vì từ Cung Gốc của Môn (2), ta phải đi từ vị trí thực tế của Leader (5).
-    # Ví dụ: Leader Mậu tại 5. Môn là Tử (2). Ta bắt đầu đi từ 5.
-    
-    current_cung = cung_goc_truc_phu
-    
-    for _ in range(steps):
-        if is_duong_don:
-            current_cung += 1
-            if current_cung > 9: current_cung = 1
-        else:
-            current_cung -= 1
-            if current_cung < 1: current_cung = 9
-            
-    # Sau khi chạy hết steps, ta có cung đích
-    if current_cung == 5: current_cung = 2
-    cung_dich_truc_su = current_cung
-    
-    # Tính offset Môn (Xoay Nhân Bàn)
-    # Môn ở Cung Đích phải là Trực Sử (Môn Gốc)
-    try:
-        idx_src_mon = QUEUE_CUNG.index(cung_goc_truc_su)
-        idx_dst_mon = QUEUE_CUNG.index(cung_dich_truc_su)
-        
-        # Môn đi thuận hay nghịch?
-        # QMDG đa số phái: Môn xoay thuận chiều kim đồng hồ trên vòng tròn cung.
-        offset_mon = idx_dst_mon - idx_src_mon
-    except ValueError: offset_mon = 0
-    
+        start_idx = LAC_THU.index(cung_goc_truc_su)
+        dst_idx_lt = (start_idx + steps) % 9
+        cung_dich_truc_su = LAC_THU[dst_idx_lt]
+        if cung_dich_truc_su == 5: cung_dich_truc_su = 2
+    except:
+        cung_dich_truc_su = cung_goc_truc_su
+
     nhan_ban = {}
-    for c_goc in MON_GOC:
-        mon = MON_GOC[c_goc]
-        if c_goc == 5: continue # Không có Môn ở 5
+    try:
+        idx_src_m = RING.index(cung_goc_truc_su)
+        idx_dst_m = RING.index(cung_dich_truc_su)
+        offset_m = idx_dst_m - idx_src_m
         
-        try:
-            current_idx = QUEUE_CUNG.index(c_goc)
-            new_idx = (current_idx + offset_mon) % 8
-            cung_moi = QUEUE_CUNG[new_idx]
-            nhan_ban[cung_moi] = mon
-        except: pass
-        
-    # 7. An Thần Bàn (Bát Thần)
-    # Trực Phù (Thần) đi theo Trực Phù (Sao) -> Tức là về cung_dich_truc_phu
-    THAN_ORDER = ["Trực Phù", "Đằng Xà", "Thái Âm", "Lục Hợp", "Bạch Hổ", "Huyền Vũ", "Cửu Địa", "Cửu Thiên"]
-    
+        for p_goc in RING:
+            mon = MON_GOC.get(p_goc)
+            if not mon: continue
+            idx_m = (RING.index(p_goc) + offset_m) % 8
+            nhan_ban[RING[idx_m]] = mon + " Môn"
+    except: pass
+
+    # 5. An Thần Bàn (Deity Plate)
+    THAN_O = ["Trực Phù", "Đằng Xà", "Thái Âm", "Lục Hợp", "Bạch Hổ", "Huyền Vũ", "Cửu Địa", "Cửu Thiên"]
     than_ban = {}
     try:
-        # Nếu Trực Phù về cung 5, thần bàn coi như về cung 2 (Khôn)
-        lookup_cung = cung_dich_truc_phu
-        if lookup_cung == 5: lookup_cung = 2
-        
-        start_idx_cung = QUEUE_CUNG.index(lookup_cung)
-        
-        for i, than in enumerate(THAN_ORDER):
-            if is_duong_don:
-                # Dương Độn: Thần đi Thuận
-                cung_idx = (start_idx_cung + i) % 8
-            else:
-                # Âm Độn: Thần đi Nghịch
-                cung_idx = (start_idx_cung - i) % 8
-                
-            cung_than = QUEUE_CUNG[cung_idx]
-            than_ban[cung_than] = than
-            
-    except ValueError: pass
+        s_idx = RING.index(dst_p if 'dst_p' in locals() else (2 if cung_dich_truc_phu == 5 else cung_dich_truc_phu))
+        for i, than in enumerate(THAN_O):
+            idx = (s_idx + i) % 8 if is_duong_don else (s_idx - i) % 8
+            than_ban[RING[idx]] = than
+    except: pass
 
-    # Trả về kết quả
     return thien_ban, can_thien_ban, nhan_ban, than_ban, cung_dich_truc_phu
 
 

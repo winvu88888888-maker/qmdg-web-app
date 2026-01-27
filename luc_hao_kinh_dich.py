@@ -115,6 +115,7 @@ def lap_qua_luc_hao(year, month, day, hour, topic="Chung", can_ngay="Giáp", chi
     v_year = (year - 4) % 12 + 1
     # Hour animal index (Tý=1, Sửu=2... Hợi=12)
     v_hour = ((hour + 1) // 2) % 12 + 1
+    if hour == 23: v_hour = 1 # Tý starts at 23:00
     
     total_upper = v_year + month + day
     total_lower = total_upper + v_hour

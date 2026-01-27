@@ -51,9 +51,13 @@ HEXAGRAM_DATA = {
 }
 
 def tinh_qua_theo_thoi_gian(year, month, day, hour):
+    # Chi index: Tý=1, Sửu=2, ..., Hợi=12
     v_year = (year - 4) % 12 + 1
+    v_hour = ((hour + 1) // 2) % 12 + 1
+    if hour == 23: v_hour = 1 # Tý starts at 23:00
+    
     total_upper = v_year + month + day
-    total_lower = total_upper + hour
+    total_lower = total_upper + v_hour
     upper = ((total_upper - 1) % 8) + 1
     lower = ((total_lower - 1) % 8) + 1
     dong_hao = ((total_lower - 1) % 6) + 1

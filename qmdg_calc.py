@@ -138,6 +138,11 @@ def get_can_chi_month(year_can, tiet_khi):
     month_can_idx = (year_can_idx + (chi_idx - 2)) % 10
     return CAN[month_can_idx], month_chi
 
+# Fixed data for QMDG
+SAO_GOC = {1: "Thiên Bồng", 2: "Thiên Nhuế", 3: "Thiên Xung", 4: "Thiên Phụ", 5: "Thiên Cầm", 6: "Thiên Tâm", 7: "Thiên Trụ", 8: "Thiên Nhậm", 9: "Thiên Anh"}
+MON_GOC = {1: "Hưu", 2: "Tử", 3: "Thương", 4: "Đỗ", 6: "Khai", 7: "Kinh", 8: "Sinh", 9: "Cảnh"}
+CHI_CUNG_MAP = {"Tý": 1, "Sửu": 8, "Dần": 8, "Mão": 3, "Thìn": 4, "Tị": 4, "Ngọ": 9, "Mùi": 2, "Thân": 2, "Dậu": 7, "Tuất": 6, "Hợi": 6}
+
 def calculate_qmdg_params(dt):
     """Main entry point for QMDG parameters calculation."""
     if dt.tzinfo is not None:
@@ -183,14 +188,12 @@ def calculate_qmdg_params(dt):
     idx_can_h = CAN.index(hour_can)
     idx_chi_h = CHI.index(hour_chi)
     leader_chi_idx = (idx_chi_h - idx_can_h) % 12
+    # Leader is Giáp [leader_chi_idx]
     lead_map = {0: "Mậu", 10: "Kỷ", 8: "Canh", 6: "Tân", 4: "Nhâm", 2: "Quý"}
     tuan_thu = lead_map.get(leader_chi_idx, "Mậu")
     
-    # 3. Find Trực Phù (Lead Star) and Trực Sử (Lead Gate)
+    # 3. Find Lead Star (Trực Phù) and Lead Gate (Trực Sử)
     # They are the fixed Star/Gate of the palace where Tuần Thủ resides on Earth Plate
-    SAO_GOC = {1: "Thiên Bồng", 2: "Thiên Nhuế", 3: "Thiên Xung", 4: "Thiên Phụ", 5: "Thiên Cầm", 6: "Thiên Tâm", 7: "Thiên Trụ", 8: "Thiên Nhậm", 9: "Thiên Anh"}
-    MON_GOC = {1: "Hưu", 2: "Tử", 3: "Thương", 4: "Đỗ", 5: "Tử", 6: "Khai", 7: "Kinh", 8: "Sinh", 9: "Cảnh"}
-    
     leader_palace = 1
     for p, can in dia_ban.items():
         if can == tuan_thu:
@@ -198,10 +201,12 @@ def calculate_qmdg_params(dt):
             break
             
     truc_phu = SAO_GOC.get(leader_palace, "Thiên Tâm")
-    truc_su = MON_GOC.get(leader_palace, "Khai")
-    if leader_palace == 5: # Trung cung
-        truc_phu = "Thiên Cầm" # Or Thiên Nhuế depends on school, but Cầm is from 5
-        truc_su = "Tử" # Or follow 2
+    # If Leader is at 5, Trực Phù is Thiên Cầm, but often moves with Thiên Nhuế (2)
+    if leader_palace == 5:
+        truc_phu = "Thiên Cầm"
+        truc_su = "Tử"
+    else:
+        truc_su = MON_GOC.get(leader_palace, "Khai")
 
     return {
         'can_gio': hour_can, 'chi_gio': hour_chi,
@@ -211,7 +216,8 @@ def calculate_qmdg_params(dt):
         'cuc': cuc, 'is_duong_don': is_duong_don,
         'tiet_khi': tiet_khi,
         'tuan_thu': tuan_thu,
+        'leader_palace': leader_palace,
         'truc_phu': truc_phu,
-        'truc_su': truc_su + " Môn" if " Môn" not in truc_su else truc_su
+        'truc_su': truc_su + (" Môn" if " Môn" not in truc_su else "")
     }
 
