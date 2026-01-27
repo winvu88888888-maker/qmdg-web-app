@@ -879,64 +879,42 @@ with st.sidebar:
     
     st.markdown("---")
     
-    # Time controls (for Ky Mon)
-    if st.session_state.current_view == "ky_mon":
-        st.markdown("### 🕐 Thời Gian")
+    st.markdown("---")
+    
+    # Time controls (GLOBAL for all views)
+    st.markdown("### 🕐 Thời Gian")
+    
+    use_current_time = st.checkbox("Sử dụng giờ hiện tại", value=True)
+    
+    vn_tz = ZoneInfo("Asia/Ho_Chi_Minh")
+    if use_current_time:
+        now = datetime.now(vn_tz)
+        selected_datetime = now
+    else:
+        now_vn = datetime.now(vn_tz)
+        selected_date = st.date_input("Chọn ngày:", now_vn.date())
+        selected_time = st.time_input("Chọn giờ:", now_vn.time())
+        selected_datetime = datetime.combine(selected_date, selected_time, tzinfo=vn_tz)
+    
+    # Calculate QMDG parameters (Always calculate to show in sidebar)
+    params = None
+    try:
+        import qmdg_calc
+        params = qmdg_calc.calculate_qmdg_params(selected_datetime)
         
-        use_current_time = st.checkbox("Sử dụng giờ hiện tại", value=True)
+        st.info(f"""
+        **Thời gian:** {selected_datetime.strftime("%H:%M - %d/%m/%Y")}
         
-        if use_current_time:
-            # Use Vietnam timezone (UTC+7)
-            vn_tz = ZoneInfo("Asia/Ho_Chi_Minh")
-            now = datetime.now(vn_tz)
-            selected_datetime = now
-        else:
-            vn_tz = ZoneInfo("Asia/Ho_Chi_Minh")
-            now_vn = datetime.now(vn_tz)
-            selected_date = st.date_input("Chọn ngày:", now_vn.date())
-            selected_time = st.time_input("Chọn giờ:", now_vn.time())
-            selected_datetime = datetime.combine(selected_date, selected_time, tzinfo=vn_tz)
+        **Âm lịch:**
+        - Giờ: {params['can_gio']} {params['chi_gio']}
+        - Ngày: {params['can_ngay']} {params['chi_ngay']}
+        - Tháng: {params['can_thang']} {params['chi_thang']}
+        - Năm: {params['can_nam']} {params['chi_nam']}
         
-        # Calculate QMDG parameters
-        try:
-            try:
-                import qmdg_calc
-                params = qmdg_calc.calculate_qmdg_params(selected_datetime)
-            except ImportError:
-                # Fallback calculation if module is missing
-                st.warning("⚠️ Module tính toán chưa được tải lên. Sử dụng chế độ rút gọn.")
-                params = {
-                    'can_gio': 'Giáp', 'chi_gio': 'Tý',
-                    'can_ngay': 'Giáp', 'chi_ngay': 'Tý',
-                    'can_thang': 'Giáp', 'chi_thang': 'Tý',
-                    'can_nam': 'Giáp', 'chi_nam': 'Tý',
-                    'cuc': 1, 'is_duong_don': True,
-                    'tiet_khi': 'Lập Xuân',
-                    'truc_phu': 'Thiên Bồng',
-                    'truc_su': 'Hưu Môn'
-                }
-            
-            st.info(f"""
-            **Thời gian:** {selected_datetime.strftime("%H:%M - %d/%m/%Y")}
-            
-            **Âm lịch:**
-            - Giờ: {params['can_gio']} {params['chi_gio']}
-            - Ngày: {params['can_ngay']} {params['chi_ngay']}
-            - Tháng: {params['can_thang']} {params['chi_thang']}
-            - Năm: {params['can_nam']} {params['chi_nam']}
-            
-            **Cục:** {params['cuc']} ({'Dương' if params.get('is_duong_don', True) else 'Âm'} Độn)
-            
-            **Tiết khí:** {params['tiet_khi']}
-            
-            **Trực Phù:** {params['truc_phu']}
-            
-            **Trực Sử:** {params['truc_su']}
-            """)
-            
-        except Exception as e:
-            st.error(f"Lỗi tính toán: {e}")
-            params = None
+        **Cục:** {params['cuc']} ({'Dương' if params.get('is_duong_don', True) else 'Âm'} Độn)
+        """)
+    except Exception as e:
+        st.error(f"Lỗi tính toán: {e}")
     
     st.markdown("---")
     
@@ -1900,10 +1878,9 @@ elif st.session_state.current_view == "mai_hoa":
     
     method = st.radio("Phương pháp:", ["Thời gian", "Ngẫu hứng"], horizontal=True, key="mh_method")
     
-    if st.button("🌸 LẬP QUẺ MAI HOA PRO", type="primary", use_container_width=True):
-        now = datetime.now()
+        dt = selected_datetime
         if method == "Thời gian":
-            res = tinh_qua_theo_thoi_gian(now.year, now.month, now.day, now.hour)
+            res = tinh_qua_theo_thoi_gian(dt.year, dt.month, dt.day, dt.hour)
         else:
             res = tinh_qua_ngau_nhien()
         
@@ -2019,13 +1996,19 @@ elif st.session_state.current_view == "luc_hao":
     
     if st.button("🎲 LẬP QUẺ LỤC HÀO PRO", type="primary", use_container_width=True):
         try:
-            now = datetime.now()
-            can_ngay = st.session_state.chart_data.get('can_ngay', 'Giáp') if 'chart_data' in st.session_state else "Giáp"
-            chi_ngay = st.session_state.chart_data.get('chi_ngay', 'Tý') if 'chart_data' in st.session_state else "Tý"
-            # Fixed call with explicit keyword arguments to resolve argument count mismatch
-            st.session_state.luc_hao_result = lap_qua_luc_hao(now.year, now.month, now.day, now.hour, topic=selected_topic, can_ngay=can_ngay, chi_ngay=chi_ngay)
+            # Use the global selected_datetime
+            dt = selected_datetime
+            can_ngay = params.get('can_ngay', 'Giáp') if params else "Giáp"
+            chi_ngay = params.get('chi_ngay', 'Tý') if params else "Tý"
+            
+            st.session_state.luc_hao_result = lap_qua_luc_hao(
+                dt.year, dt.month, dt.day, dt.hour, 
+                topic=selected_topic, 
+                can_ngay=can_ngay, 
+                chi_ngay=chi_ngay
+            )
         except Exception as e:
-            st.error(f"Lỗi: {e}")
+            st.error(f"Lỗi lập quẻ: {e}")
 
     if 'luc_hao_result' in st.session_state:
         res = st.session_state.luc_hao_result

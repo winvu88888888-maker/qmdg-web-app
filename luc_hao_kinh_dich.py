@@ -104,28 +104,67 @@ def get_luc_than(h_element, p_element):
     }
     return relations.get(p_element, {}).get(h_element, "Huynh Đệ")
 
+
 def lap_qua_luc_hao(year, month, day, hour, topic="Chung", can_ngay="Giáp", chi_ngay="Tý", **kwargs):
-    hao_results = [random.randint(6, 9) for _ in range(6)]
-    ban_lines = [1 if h in [7, 9] else 0 for h in hao_results]
-    bien_lines = [ (0 if h==9 else 1 if h==6 else (1 if h==7 else 0)) for h in hao_results ]
+    # Time-based calculation for hexagram (Traditional method)
+    # Upper: (Year + Month + Day) % 8
+    # Lower: (Year + Month + Day + Hour) % 8
+    # Moving: (Year + Month + Day + Hour) % 6
     
+    # Year animal index (Tý=1, Sửu=2... Hợi=12)
+    v_year = (year - 4) % 12 + 1
+    # Hour animal index (Tý=1, Sửu=2... Hợi=12)
+    v_hour = ((hour + 1) // 2) % 12 + 1
+    
+    total_upper = v_year + month + day
+    total_lower = total_upper + v_hour
+    
+    upper_idx = ((total_upper - 1) % 8) + 1
+    lower_idx = ((total_lower - 1) % 8) + 1
+    moving_idx = ((total_lower - 1) % 6) + 1 # 1-indexed
+
+    # Convert to lines (Standard I Ching bit order: 0: Earth/Yin, 1: Heaven/Yang)
+    trigrams = {
+        1: [1, 1, 1], 2: [1, 1, 0], 3: [1, 0, 1], 4: [1, 0, 0],
+        5: [0, 1, 1], 6: [0, 1, 0], 7: [0, 0, 1], 8: [0, 0, 0]
+    }
+    
+    ban_lines = trigrams[lower_idx] + trigrams[upper_idx]
+    
+    # Calculate Moving results for display
+    hao_results = []
+    for i in range(1, 7):
+        if i == moving_idx:
+            hao_type = 9 if ban_lines[i-1] == 1 else 6
+        else:
+            hao_type = 7 if ban_lines[i-1] == 1 else 8
+        hao_results.append(hao_type)
+
+    bien_lines = list(ban_lines)
+    bien_lines[moving_idx - 1] = 0 if ban_lines[moving_idx - 1] == 1 else 1
+
     ban_name = get_hex_name(ban_lines)
     bien_name = get_hex_name(bien_lines)
     
     palace = HEXAGRAM_PALACES.get(ban_name, "Càn")
     p_element = PALACE_ELEMENTS.get(palace, "Kim")
     
-    start_thu = {"Giáp":0, "Ất":0, "Bính":1, "Đinh":1, "Mậu":2, "Kỷ":3, "Canh":4, "Tân":4, "Nhâm":5, "Quý":5}.get(can_ngay[0], 0)
+    # Lục Thú based on Day Can
+    start_thu = {"Giáp": 0, "Kỷ": 0, "Ất": 1, "Canh": 1, "Bính": 2, "Tân": 2, "Đinh": 3, "Nhâm": 3, "Mậu": 4, "Quý": 5}.get(can_ngay[0], 0)
     nap_giap = NAP_GIAP_MAP.get(palace, NAP_GIAP_MAP["Càn"])
     
     # Advanced markers
     void_branches = get_tuan_khong(can_ngay, chi_ngay)
     ma_branch = get_dich_ma(chi_ngay)
     
-    # Simple The/Ung logic (Hào 3/6 as common default in simplified apps, but let's vary it)
-    the_pos = random.choice([1, 2, 3, 4, 5, 6])
+    # Standard The/Ung determination for 8 groups
+    # Simplified logic for 64 hexagrams (needs full mapping for perfect accuracy)
+    # But for now, we use a more stable default than random
+    the_map = {"Càn Vi Thiên": 6, "Khôn Vi Địa": 6, "Khảm Vi Thủy": 6, "Ly Vi Hỏa": 6, "Chấn Vi Lôi": 6, "Tốn Vi Phong": 6, "Cấn Vi Sơn": 6, "Đoài Vi Trạch": 6}
+    the_pos = the_map.get(ban_name, 3) # Default to 3
     ung_pos = (the_pos + 2) % 6 + 1
-    
+    if ung_pos == 0: ung_pos = 6
+
     details_ban = []
     for i in range(6):
         cc = nap_giap[i]; c_branch = cc.split("-")[0]; c_element = cc.split("-")[1]
@@ -133,13 +172,13 @@ def lap_qua_luc_hao(year, month, day, hour, topic="Chung", can_ngay="Giáp", chi
         strength = get_element_strength(c_element, month)
         
         markers = []
-        if (i+1)==the_pos: markers.append("(T)")
-        if (i+1)==ung_pos: markers.append("(Ứ)")
-        if c_branch in void_branches: markers.append("(○)") # Void
-        if c_branch == ma_branch: markers.append("(🐎)") # Traveling Horse
+        if (i+1)==the_pos: markers.append("(Thế)")
+        if (i+1)==ung_pos: markers.append("(Ứng)")
+        if c_branch in void_branches: markers.append("(○)")
+        if c_branch == ma_branch: markers.append("(🐎)")
         
         details_ban.append({
-            'hao': i+1, 'line': ban_lines[i], 'is_moving': hao_results[i] in [6, 9],
+            'hao': i+1, 'line': ban_lines[i], 'is_moving': (i+1) == moving_idx,
             'luc_than': lt, 'can_chi': cc, 'luc_thu': LUC_THU[(start_thu+i)%6],
             'strength': strength,
             'marker': " ".join(markers)
@@ -147,8 +186,6 @@ def lap_qua_luc_hao(year, month, day, hour, topic="Chung", can_ngay="Giáp", chi
         
     details_bien = []
     for i in range(6):
-        # Biến hexagram Can Chi usually depends on its own quái
-        # For simplicity, we use same palace's nap giap but can be improved
         cc = nap_giap[i]; c_branch = cc.split("-")[0]; c_element = cc.split("-")[1]
         lt = get_luc_than(c_element, p_element)
         strength = get_element_strength(c_element, month)
@@ -167,8 +204,8 @@ def lap_qua_luc_hao(year, month, day, hour, topic="Chung", can_ngay="Giáp", chi
     return {
         'ban': {'name': ban_name, 'lines': ban_lines, 'details': details_ban, 'palace': palace},
         'bien': {'name': bien_name, 'lines': bien_lines, 'details': details_bien},
-        'dong_hao': [i+1 for i, h in enumerate(hao_results) if h in [6, 9]],
-        'conclusion': f"Quẻ {ban_name} biến {bien_name}. {topic} tốt lành.",
+        'dong_hao': [moving_idx],
+        'conclusion': f"Quẻ {ban_name} biến {bien_name}. {topic} có biến tại hào {moving_idx}.",
         'the_ung': f"Thế hào {the_pos}, Ứng hào {ung_pos}"
     }
 
