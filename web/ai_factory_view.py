@@ -15,10 +15,10 @@ if current_dir not in sys.path: sys.path.insert(0, current_dir)
 try:
     try:
         from web.ai_factory_tabs import render_universal_data_hub_tab, render_system_management_tab, render_mining_summary_on_dashboard
-        from ai_modules.shard_manager import add_entry
+        from ai_modules.shard_manager import add_entry, get_hub_stats
     except ImportError:
         from ai_factory_tabs import render_universal_data_hub_tab, render_system_management_tab, render_mining_summary_on_dashboard
-        from shard_manager import add_entry
+        from shard_manager import add_entry, get_hub_stats
 except Exception as e:
     st.error(f"🚨 Lỗi nạp Hệ thống: {e}")
     def render_universal_data_hub_tab(): st.error("Tab Dữ Liệu lỗi")
@@ -79,14 +79,21 @@ def render_ai_factory_view():
 def render_dashboard_tab():
     st.subheader("Thống Kê Hoạt Động (Real-time)")
     stats = st.session_state.memory.get_statistics()
+    
+    # Merge with Shard Hub Stats
+    hub_stats = get_hub_stats()
+    
     col1, col2, col3, col4 = st.columns(4)
     s = 'padding:15px;border-radius:10px;border-left:5px solid '
-    col1.markdown(f'<div style="{s}#667eea;background:#f8f9fa"><h3>📁 {stats.get("total_code_files", 0)}</h3><p>Đã tạo</p></div>', unsafe_allow_html=True)
-    col2.markdown(f'<div style="{s}#764ba2;background:#f8f9fa"><h3>📚 {stats.get("total_knowledge", 0)}</h3><p>Tri thức</p></div>', unsafe_allow_html=True)
-    col3.markdown(f'<div style="{s}#2ecc71;background:#f8f9fa"><h3>⚡ {stats.get("total_executions", 0)}</h3><p>Vận hành</p></div>', unsafe_allow_html=True)
+    
+    # Show real Shard Hub total
+    col1.markdown(f'<div style="{s}#3b82f6;background:#f8f9fa"><h3>📁 {hub_stats.get("total", 0)}</h3><p>Shards Hub</p></div>', unsafe_allow_html=True)
+    col2.markdown(f'<div style="{s}#764ba2;background:#f8f9fa"><h3>📚 {stats.get("total_knowledge", 0)}</h3><p>Memory DB</p></div>', unsafe_allow_html=True)
+    col3.markdown(f'<div style="{s}#2ecc71;background:#f8f9fa"><h3>💾 {hub_stats.get("size_mb", 0.0)} MB</h3><p>Dung lượng</p></div>', unsafe_allow_html=True)
+    
     success = stats.get("executions_by_status", {}).get("success", 0)
     total = max(1, stats.get("total_executions", 0))
-    col4.markdown(f'<div style="{s}#e74c3c;background:#f8f9fa"><h3>✅ {int(success/total*100)}%</h3><p>Hiệu suất</p></div>', unsafe_allow_html=True)
+    col4.markdown(f'<div style="{s}#e74c3c;background:#f8f9fa"><h3>✅ {int(success/total*100)}%</h3><p>Hệ thống</p></div>', unsafe_allow_html=True)
     
     st.markdown("---")
     render_mining_summary_on_dashboard()

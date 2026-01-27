@@ -9,14 +9,29 @@ sys.path.append(os.path.join(current_dir, 'ai_modules'))
 sys.path.append(current_dir)
 
 try:
-    from shard_manager import add_entry
-    from mining_strategist import MiningStrategist
-    from maintenance_manager import MaintenanceManager
-    from gemini_helper import GeminiQMDGHelper
-    import streamlit as st
-except ImportError:
-    print("❌ Lỗi: Thiếu module cần thiết.")
-    sys.exit(1)
+    # Try relative imports first for when run as module
+    from .shard_manager import add_entry
+    from .mining_strategist import MiningStrategist
+    from .maintenance_manager import MaintenanceManager
+    from .gemini_helper import GeminiQMDGHelper
+except (ImportError, ValueError):
+    # Fallback to direct imports
+    try:
+        from shard_manager import add_entry
+        from mining_strategist import MiningStrategist
+        from maintenance_manager import MaintenanceManager
+        from gemini_helper import GeminiQMDGHelper
+    except ImportError:
+        # Final fallback for Streamlit context
+        import sys
+        import os
+        sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+        from shard_manager import add_entry
+        from mining_strategist import MiningStrategist
+        from maintenance_manager import MaintenanceManager
+        from gemini_helper import GeminiQMDGHelper
+
+import streamlit as st
 
 def run_mining_cycle(api_key, category=None):
     """Executes one full cycle of autonomous mining."""
@@ -32,7 +47,9 @@ def run_mining_cycle(api_key, category=None):
     print(f"📡 Quân đoàn AI đã xác định mục tiêu khai thác: {queue}")
     
     for topic in queue:
-        print(f"🤖 Đang khai thác sâu: {topic}...")
+        status_msg = f"🤖 Đang khai thác sâu: {topic}..."
+        print(status_msg)
+        if 'st' in globals(): st.toast(status_msg)
         
         # 2. Synthesize deep-dive content using Gemini
         mining_prompt = strategist.synthesize_mining_prompt(topic)
@@ -45,16 +62,18 @@ def run_mining_cycle(api_key, category=None):
             title=topic,
             content=content,
             category=cat_match,
-            source=f"AI Autonomous Miner ({topic.split(':')[1].strip()})",
+            source=f"Quân Đoàn AI - Agent {random.randint(1,50)}",
             tags=["autonomous", "hyper-depth", topic.split(':')[0].strip()]
         )
         
         if id:
-            print(f"✅ Đã nạp thành công: {topic} [ID: {id}]")
+            success_msg = f"✅ Đã nạp thành công: {topic}"
+            print(success_msg)
+            if 'st' in globals(): st.success(success_msg)
         else:
             print(f"❌ Lỗi nạp dữ liệu cho: {topic}")
             
-        time.sleep(2) # Prevent rate limits
+        time.sleep(1) # Prevent rate limits
 
     # 4. AUTONOMOUS CLEANUP (24/7 Cleanup Legion)
     print("🧹 Kích hoạt Quân đoàn Dọn dẹp tự động...")

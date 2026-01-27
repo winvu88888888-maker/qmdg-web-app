@@ -21,8 +21,10 @@ ROOT_DIR = setup_sub_paths()
 # --- IMPORT SHARD MANAGER ---
 try:
     from shard_manager import add_entry, search_index, get_full_entry, delete_entry, get_hub_stats
+    from autonomous_miner import run_mining_cycle
 except ImportError:
     from ai_modules.shard_manager import add_entry, search_index, get_full_entry, delete_entry, get_hub_stats
+    from ai_modules.autonomous_miner import run_mining_cycle
 
 # --- TOP 5 HOT TOPICS LOGIC ---
 def get_top_5_hot_topics():
@@ -134,9 +136,9 @@ def render_mining_summary_on_dashboard():
     # 1. CLEANUP LEGION STATUS
     st.markdown("### 🧹 Quân Đoàn Dọn Dẹp & Tối Ưu (Autonomous 24/7)")
     c_m1, c_m2, c_m3 = st.columns(3)
-    c_m1.metric("Bản ghi trùng đã xóa", "142", delta="-5")
-    c_m2.metric("Túi nén (Bags)", "4")
-    c_m3.info("🛡️ Trạng thái: **🟢 Đang dọn dẹp...**")
+    c_m1.metric("Bản ghi trùng đã xóa", "0", delta="0")
+    c_m2.metric("Túi nén (Bags)", "0")
+    c_m3.info("🛡️ Trạng thái: **🟢 Sẵn sàng dọn dẹp**")
     
     st.markdown("---")
 
@@ -162,11 +164,26 @@ def render_mining_summary_on_dashboard():
     
     # 3. 50 MINING AGENTS STATUS
     st.markdown("### 🏹 Quân Đoàn 50 Đặc Phái Viên AI (Khai thác 24/7)")
+    
+    # Real Trigger Button
+    if st.button("🚀 KÍCH HOẠT QUÂN ĐOÀN KHAI THÁC (RUN CYCLE)", use_container_width=True, type="primary"):
+        if 'gemini_key' in st.session_state and st.session_state.gemini_key:
+            with st.spinner("🤖 Quân đoàn AI đang xuất quân..."):
+                try:
+                    run_mining_cycle(st.session_state.gemini_key)
+                    st.success("✅ Chu kỳ khai thác hoàn tất! Dữ liệu đã được nạp vào Shard Hub.")
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"Lỗi khai thác: {e}")
+        else:
+            st.warning("⚠️ Vui lòng cấu hình Gemini API Key để kích hoạt quân đoàn.")
+
+    stats = get_hub_stats()
     col1, col2, col3, col4 = st.columns(4)
     col1.metric("Tổng Đặc phái viên", "50")
     col2.metric("Đang hoạt động", "49", delta="1")
-    col3.metric("Lưu trữ Shard", "1.5 GB", delta="+150MB")
-    col4.metric("Dữ liệu nạp/giờ", "28 Items")
+    col3.metric("Lưu trữ Shard", f"{stats['size_mb']} MB")
+    col4.metric("Dữ liệu nạp", f"{stats['total']} bản ghi")
     
     with st.expander("🔍 Xem danh sách 50 Đặc phái viên đang thực nhiệm"):
         miners = get_50_miners()
