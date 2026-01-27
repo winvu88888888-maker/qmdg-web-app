@@ -105,19 +105,22 @@ def get_luc_than(h_element, p_element):
     return relations.get(p_element, {}).get(h_element, "Huynh Đệ")
 
 
+from qmdg_calc import solar_to_lunar
+
 def lap_qua_luc_hao(year, month, day, hour, topic="Chung", can_ngay="Giáp", chi_ngay="Tý", **kwargs):
-    # Time-based calculation for hexagram (Traditional method)
-    # Upper: (Year + Month + Day) % 8
-    # Lower: (Year + Month + Day + Hour) % 8
-    # Moving: (Year + Month + Day + Hour) % 6
+    # Convert to Lunar Date
+    dt = datetime(year, month, day, hour)
+    lday, lmonth, lyear, is_leap = solar_to_lunar(dt)
     
-    # Year animal index (Tý=1, Sửu=2... Hợi=12)
-    v_year = (year - 4) % 12 + 1
+    # Year Chi index: Tý=1, Sửu=2, ..., Hợi=12
+    lyear_chi_idx = (lyear - 4) % 12 + 1
+    
     # Hour animal index (Tý=1, Sửu=2... Hợi=12)
     v_hour = ((hour + 1) // 2) % 12 + 1
     if hour == 23: v_hour = 1 # Tý starts at 23:00
     
-    total_upper = v_year + month + day
+    # Standard time-based calculation using Lunar numbers
+    total_upper = lyear_chi_idx + lmonth + lday
     total_lower = total_upper + v_hour
     
     upper_idx = ((total_upper - 1) % 8) + 1

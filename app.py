@@ -902,14 +902,19 @@ with st.sidebar:
         import qmdg_calc
         params = qmdg_calc.calculate_qmdg_params(selected_datetime)
         
+        # Calculate Lunar Date for display
+        lday, lmonth, lyear, is_leap = qmdg_calc.solar_to_lunar(selected_datetime)
+        l_year_can, l_year_chi = qmdg_calc.get_can_chi_year(lyear)
+        l_year_name = f"{l_year_can} {l_year_chi}"
+        
         st.info(f"""
         **Thời gian:** {selected_datetime.strftime("%H:%M - %d/%m/%Y")}
         
         **Âm lịch:**
+        - Ngày: **{lday}/{lmonth} năm {l_year_name}** {'(Nhuận)' if is_leap else ''}
         - Giờ: {params['can_gio']} {params['chi_gio']}
         - Ngày: {params['can_ngay']} {params['chi_ngay']}
         - Tháng: {params['can_thang']} {params['chi_thang']}
-        - Năm: {params['can_nam']} {params['chi_nam']}
         
         **Cục:** {params['cuc']} ({'Dương' if params.get('is_duong_don', True) else 'Âm'} Độn)
         """)
@@ -1014,13 +1019,8 @@ if st.session_state.current_view == "ky_mon":
     if params:
         # Calculate full chart
         try:
-            # Get Can Gio
-            map_can_ngay = {"Giáp": 0, "Kỷ": 0, "Ất": 1, "Canh": 1, "Bính": 2, "Tân": 2, 
-                            "Đinh": 3, "Nhâm": 3, "Mậu": 4, "Quý": 4}
-            idx_start = map_can_ngay.get(params['can_ngay'], 0)
-            idx_chi = CAN_CHI_Gio.index(params['chi_gio'])
-            can_gio_idx = (idx_start * 2 + idx_chi) % 10
-            can_gio = CAN_10[can_gio_idx]
+            # Get Can Gio from pre-calculated params (Standard sources)
+            can_gio = params['can_gio']
             
             # Calculate boards
             from qmdg_data import an_bai_luc_nghi, lap_ban_qmdg, tinh_khong_vong, tinh_dich_ma

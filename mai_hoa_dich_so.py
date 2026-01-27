@@ -50,18 +50,30 @@ HEXAGRAM_DATA = {
     (4, 6): {"ten": "Lôi Thủy Giải", "tuong": "Lôi vũ tác", "nghĩa": "Giải tỏa bế tắc, tha thứ."},
 }
 
+from qmdg_calc import solar_to_lunar
+
 def tinh_qua_theo_thoi_gian(year, month, day, hour):
+    # Convert to Lunar Date
+    dt = datetime(year, month, day, hour)
+    lday, lmonth, lyear, is_leap = solar_to_lunar(dt)
+    
+    # Year Chi index: Tý=1, Sửu=2, ..., Hợi=12
+    lyear_chi_idx = (lyear - 4) % 12 + 1
+    
     # Chi index: Tý=1, Sửu=2, ..., Hợi=12
-    v_year = (year - 4) % 12 + 1
     v_hour = ((hour + 1) // 2) % 12 + 1
     if hour == 23: v_hour = 1 # Tý starts at 23:00
     
-    total_upper = v_year + month + day
+    # Mai Hoa Formula: (Year + Month + Day) for Upper, (Year + Month + Day + Hour) for Lower
+    total_upper = lyear_chi_idx + lmonth + lday
     total_lower = total_upper + v_hour
+    
     upper = ((total_upper - 1) % 8) + 1
     lower = ((total_lower - 1) % 8) + 1
     dong_hao = ((total_lower - 1) % 6) + 1
+    
     res = build_res(upper, lower, dong_hao)
+    res['lunar_info'] = f"Ngày {lday}/{lmonth} năm {lyear} ({'Nhuận' if is_leap else ''})"
     return res
 
 def tinh_qua_ngau_nhien():
