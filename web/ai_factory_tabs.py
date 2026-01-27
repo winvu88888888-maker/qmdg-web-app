@@ -107,7 +107,7 @@ def render_universal_data_hub_tab():
 
     categories = ["Mã Nguồn", "Nghiên Cứu", "Kiến Thức", "Kỳ Môn Độn Giáp", "Kinh Dịch", "Khác"]
 
-    with st.expander("📥 Nạp Dữ Liệu Mới Thủ Công", key="exp_manual_entry"):
+    with st.expander("📥 Nạp Dữ Liệu Mới Thủ Công"):
         with st.form("sharded_hub_form_final", clear_on_submit=True):
             title = st.text_input("Tiêu đề/Chủ đề:")
             cat = st.selectbox("Phân loại:", categories)
@@ -130,7 +130,7 @@ def render_universal_data_hub_tab():
     st.write(f"Đang hiển thị {len(index_results)} mục.")
     
     for e in index_results:
-        with st.expander(f"[{e['category']}] 📁 {e['title']} ({e['created_at'][:10]})", key=f"exp_hub_{e['id']}"):
+        with st.expander(f"[{e['category']}] 📁 {e['title']} ({e['created_at'][:10]})"):
             if st.button("👁️ Tải nội dung chi tiết", key=f"load_{e['id']}"):
                 full = get_full_entry(e['id'], e['shard'])
                 if full: 
@@ -243,7 +243,7 @@ def render_mining_summary_on_dashboard(key_suffix=""):
     if config.get("last_run"):
         st.caption(f"🕒 Lần cuối hoạt động: {config['last_run']} | Giãn cách: {config.get('interval_minutes')} phút")
     
-    with st.expander("🔍 Xem danh sách 50 Đặc phái viên đang thực nhiệm", key=f"exp_miners_{key_suffix}"):
+    with st.expander(f"🔍 Xem danh sách 50 Đặc phái viên đang thực nhiệm ({key_suffix.strip('_')})"):
         miners = get_50_miners()
         for m in miners:
             cx1, cx2, cx3 = st.columns([1, 2, 2])
